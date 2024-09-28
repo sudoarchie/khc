@@ -5,7 +5,7 @@ import HashPassword from "../utils/hashUtils";
 
 const prisma = new PrismaClient();
 
-export async function TeacherSignUp(req: Request, res: Response, next: NextFunction) {
+export async function TeacherSignUp(req: Request, res: Response) {
   const data = req.body;
   try {
     const hashedPassword = await HashPassword({ password: data.password });
@@ -30,5 +30,22 @@ export async function TeacherSignUp(req: Request, res: Response, next: NextFunct
       msg: "Something went wrong",
       error: error.message || error, // Log the error for debugging
     });
+  }
+}
+
+export async function TeacherSignIn(req: Request, res: Response) {
+  const data = req.body
+  try {
+    const teacher = await prisma.teacher.findUnique({
+      where: {
+        email: data.email
+      }
+    })
+  } catch (error) {
+    res.status(401).json({
+      msg: "something when wrong",
+      err: error
+    })
+    console.log(error)
   }
 }

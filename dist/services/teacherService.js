@@ -13,10 +13,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TeacherSignUp = TeacherSignUp;
+exports.TeacherSignIn = TeacherSignIn;
 const client_1 = require("@prisma/client");
 const hashUtils_1 = __importDefault(require("../utils/hashUtils"));
 const prisma = new client_1.PrismaClient();
-function TeacherSignUp(req, res, next) {
+function TeacherSignUp(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const data = req.body;
         try {
@@ -41,6 +42,25 @@ function TeacherSignUp(req, res, next) {
                 msg: "Something went wrong",
                 error: error.message || error, // Log the error for debugging
             });
+        }
+    });
+}
+function TeacherSignIn(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const data = req.body;
+        try {
+            const teacher = yield prisma.teacher.findUnique({
+                where: {
+                    email: data.email,
+                },
+            });
+        }
+        catch (error) {
+            res.status(401).json({
+                msg: "something when wrong",
+                err: error
+            });
+            console.log(error);
         }
     });
 }

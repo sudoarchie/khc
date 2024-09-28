@@ -4,6 +4,6 @@ model Teacher {
   firstName  String
   secondName String
   thirdName  String
-  email      String
+  email      String @unique
   password   String
 }
