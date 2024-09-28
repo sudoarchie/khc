@@ -41,6 +41,11 @@ export async function TeacherSignIn(req: Request, res: Response) {
         email: data.email
       }
     })
+    if (!teacher) {
+      return res.status(401).json({
+        msg: "Username does not exist"
+      })
+    }
   } catch (error) {
     res.status(401).json({
       msg: "something when wrong",
