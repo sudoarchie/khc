@@ -1,4 +1,0 @@
-PORT = 3000
-DATABASE_URL = "mongodb+srv://websitekhc:websitekhc@cluster0.c27dp.mongodb.net/khc"
-BYCRYPT_PASS = "MYsuperSECRETpassword"
-JWT_SECRET = "MYsuperSECRETpassword"

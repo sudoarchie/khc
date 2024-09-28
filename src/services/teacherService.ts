@@ -1,9 +1,10 @@
-
+import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 import { PrismaClient } from "@prisma/client";
 import HashPassword from "../utils/hashUtils";
-
+import bcrypt from "bcrypt";
 const prisma = new PrismaClient();
+import 'dotenv/config'
 
 export async function TeacherSignUp(req: Request, res: Response) {
   const data = req.body;
@@ -22,9 +23,8 @@ export async function TeacherSignUp(req: Request, res: Response) {
 
     res.status(200).json({
       msg: "Teacher created successfully",
-      teacher: createdData,  // Optionally return the created teacher data
+      teacher: createdData, // Optionally return the created teacher data
     });
-
   } catch (error: any) {
     res.status(500).json({
       msg: "Something went wrong",
@@ -34,23 +34,37 @@ export async function TeacherSignUp(req: Request, res: Response) {
 }
 
 export async function TeacherSignIn(req: Request, res: Response) {
-  const data = req.body
+  const data = req.body;
   try {
     const teacher = await prisma.teacher.findUnique({
       where: {
-        email: data.email
-      }
-    })
+        email: data.email,
+      },
+    });
     if (!teacher) {
       return res.status(401).json({
-        msg: "Username does not exist"
-      })
+        msg: "Username does not exist",
+      });
+    }
+    const verifyPassword = await bcrypt.compare(
+      body.password,
+      teacher.password,
+    );
+    if (!verifyPassword) {
+      return res.status(401).json({
+        msg: "Incorrect Password",
+      });
+    } else {
+      const token = await jwt.sign({
+        id: teacher.id
+        email: teacher.email
+        },process.env.JWT_);
     }
   } catch (error) {
     res.status(401).json({
       msg: "something when wrong",
-      err: error
-    })
-    console.log(error)
+      err: error,
+    });
+    console.log(error);
   }
 }
