@@ -1,12 +1,13 @@
-import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
+require('dotenv').config()
+import jwt from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
 import HashPassword from "../utils/hashUtils";
 import bcrypt from "bcrypt";
 const prisma = new PrismaClient();
-import 'dotenv/config'
 
 export async function TeacherSignUp(req: Request, res: Response) {
+  console.log(process.env)
   const data = req.body;
   try {
     const hashedPassword = await HashPassword({ password: data.password });
@@ -47,7 +48,7 @@ export async function TeacherSignIn(req: Request, res: Response) {
       });
     }
     const verifyPassword = await bcrypt.compare(
-      body.password,
+      data.password,
       teacher.password,
     );
     if (!verifyPassword) {
@@ -55,10 +56,14 @@ export async function TeacherSignIn(req: Request, res: Response) {
         msg: "Incorrect Password",
       });
     } else {
-      const token = await jwt.sign({
-        id: teacher.id
-        email: teacher.email
-        },process.env.JWT_);
+      // const token = jwt.sign(
+      //   {
+      //     id: teacher.id,
+      //     email: teacher.email,
+      //   },
+      //   process.env.JWT_SECRET,
+      //   { expiresIn: "1h" }, // Token expires in 1 hour
+      // );
     }
   } catch (error) {
     res.status(401).json({
