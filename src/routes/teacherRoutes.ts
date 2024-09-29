@@ -1,8 +1,14 @@
-import express from 'express'
-import { TeacherSignIn, TeacherSignUp } from '../services/teacherService'
+import express from "express";
+import { TeacherSignIn, TeacherSignUp } from "../services/teacherService";
 
-const teacherRouter = express.Router()
+const teacherRouter = express.Router();
 
-teacherRouter.post("/signup", TeacherSignUp)
-teacherRouter.post("/signin", TeacherSignIn)
-export default teacherRouter
+teacherRouter.post("/signup", (req, res) => {
+  TeacherSignUp(req, res);
+});
+
+teacherRouter.post("/signin", (req, res) => {
+  TeacherSignIn(req, res);
+});
+
+export default teacherRouter;
