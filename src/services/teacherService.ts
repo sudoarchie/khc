@@ -1,14 +1,16 @@
-import { Request, Response, NextFunction } from "express";
-require('dotenv').config()
+import { Request, Response } from "express";
+require("dotenv").config();
 import jwt from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
 import HashPassword from "../utils/hashUtils";
 import bcrypt from "bcrypt";
+
 const prisma = new PrismaClient();
 
-export async function TeacherSignUp(req: Request, res: Response) {
-  console.log(process.env)
+async function TeacherSignUp(req: Request, res: Response) {
+  console.log(process.env); // Debugging line to see if environment variables are loaded
   const data = req.body;
+
   try {
     const hashedPassword = await HashPassword({ password: data.password });
     const createdData = await prisma.teacher.create({
@@ -34,42 +36,58 @@ export async function TeacherSignUp(req: Request, res: Response) {
   }
 }
 
-export async function TeacherSignIn(req: Request, res: Response) {
+async function TeacherSignIn(req: Request, res: Response) {
   const data = req.body;
+
   try {
     const teacher = await prisma.teacher.findUnique({
       where: {
         email: data.email,
       },
     });
+
     if (!teacher) {
       return res.status(401).json({
         msg: "Username does not exist",
       });
     }
+
     const verifyPassword = await bcrypt.compare(
       data.password,
-      teacher.password,
+      teacher.password
     );
+
     if (!verifyPassword) {
       return res.status(401).json({
         msg: "Incorrect Password",
       });
     } else {
-      // const token = jwt.sign(
-      //   {
-      //     id: teacher.id,
-      //     email: teacher.email,
-      //   },
-      //   process.env.JWT_SECRET,
-      //   { expiresIn: "1h" }, // Token expires in 1 hour
-      // );
+      // Ensure JWT_SECRET is set
+      if (!process.env.JWT_SECRET) {
+        return res.status(500).json({
+          msg: "JWT secret is not configured",
+        });
+      }
+
+      const token = jwt.sign(
+        {
+          id: teacher.id,
+          email: teacher.email,
+        },
+        process.env.JWT_SECRET || "MYsuperSECREATpassword" // Optional: Token expiration time
+      );
+
+      return res.status(200).json({
+        msg: "Login successful",
+        token, // Return the generated token
+      });
     }
-  } catch (error) {
-    res.status(401).json({
-      msg: "something when wrong",
-      err: error,
+  } catch (error: any) {
+    res.status(500).json({
+      msg: "Something went wrong",
+      err: error.message || error,
     });
     console.log(error);
   }
 }
+export { TeacherSignIn, TeacherSignUp };
