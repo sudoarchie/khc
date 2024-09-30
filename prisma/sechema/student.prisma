@@ -1,0 +1,8 @@
+model Student {
+    id       String @id @default(auto()) @map("_id") @db.ObjectId
+    name     String
+    email    String @unique
+    mobileNo String @unique
+    country  String
+    password String
+}
