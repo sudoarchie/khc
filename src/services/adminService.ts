@@ -1,38 +1,31 @@
-import { Request, Response } from "express";
 require("dotenv").config();
 import jwt from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 const prisma = new PrismaClient()
-export async function AdminSignIn(req: Request, res: Response) {
-  const body = req.body
-  if (!body.email || !body.password) {
-    res.status(401).json({
-      msg: "Email or Password not found!!!"
-    })
+interface admin {
+  email: string,
+  password: string
+}
+export async function AdminSignIn({ email, password }: admin) {
+  if (!email || !password) {
+    throw new Error("Incorrect Email or Password")
   }
   try {
-
     const admin = await prisma.admin.findUnique({
       where: {
-        email: body.email
+        email: email
       }
     })
-
     if (!admin) {
-      return res.status(401).json({
-        msg: "Wrong Credentials!!"
-
-      })
+      throw new Error("wrong creadentials")
     }
     const verifyPassword = await bcrypt.compare(
-      body.password,
+      password,
       admin.password
     );
     if (!verifyPassword) {
-      return res.status(401).json({
-        msg: "Incorrect Email or Password"
-      })
+      throw new Error("Wrong Creadentials")
     }
     const token = jwt.sign(
       {
@@ -41,14 +34,13 @@ export async function AdminSignIn(req: Request, res: Response) {
       },
       process.env.JWT_SECRET || "MYsuperSECREATpassword" // Optional: Token expiration time
     );
-    res.status(200).json({
-      msg: "Login Successful",
-      token
-    })
-  } catch (err) {
-    res.status(500).json({
-      msg: "Internal Server Error",
-      err
-    })
+
+    return token
+  } catch (err: any) {
+    if (err.message) {
+      throw err
+    } else {
+      throw new Error("Something went wrong!!!")
+    }
   }
 }
