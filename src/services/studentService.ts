@@ -6,42 +6,43 @@ import HashPassword from "../utils/hashUtils";
 import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
+interface Student {
+  email: string
+  password: string
+  name: string
+  mobileNo: string
+  country: string
+}
 
-async function StudentSignUp(req: Request, res: Response) {
+async function StudentSignUp({ email, password, name, mobileNo, country }: Student) {
   console.log(process.env); // Debugging line to see if environment variables are loaded
-  const data = req.body;
 
   try {
-    const hashedPassword = await HashPassword({ password: data.password });
+    const hashedPassword = await HashPassword({ password: password });
     const createdData = await prisma.student.create({
       data: {
-        email: data.email,
+        email: email,
         password: hashedPassword,
-        name: data.name,
-        mobileNo: data.mobileNo,
-        country: data.country,
+        name: name,
+        mobileNo: mobileNo,
+        country: country,
       },
     });
 
-    res.status(200).json({
+    return ({
       msg: "Student created successfully",
       student: createdData, // Optionally return the created student data
     });
   } catch (error: any) {
-    res.status(500).json({
-      msg: "Something went wrong",
-      error: error.message || error, // Log the error for debugging
-    });
+    throw new Error(`Something went wrong ${error}`);
   }
 }
 
-async function StudentSignIn(req: Request, res: Response) {
-  const { email, password } = req.body;
+async function StudentLogin({ email, password }: { email: string, password: string }) {
+
 
   if (!email || !password) {
-    return res.status(400).json({
-      msg: "Email and Password not found",
-    });
+    throw new Error("Invalid Email or Password")
   }
   try {
     const student = await prisma.student.findUnique({
@@ -49,9 +50,7 @@ async function StudentSignIn(req: Request, res: Response) {
     });
 
     if (!student) {
-      return res.status(401).json({
-        msg: "Username does not exist",
-      });
+      throw new Error("Invalid User")
     }
 
     const verifyPassword = await bcrypt.compare(
@@ -60,15 +59,11 @@ async function StudentSignIn(req: Request, res: Response) {
     );
 
     if (!verifyPassword) {
-      return res.status(401).json({
-        msg: "Incorrect Password",
-      });
+      throw new Error("Invalid Username or Password")
     } else {
       // Ensure JWT_SECRET is set
       if (!process.env.JWT_SECRET) {
-        return res.status(500).json({
-          msg: "JWT secret is not configured",
-        });
+        throw new Error("JWT is not configured")
       }
 
       const token = jwt.sign(
@@ -79,17 +74,18 @@ async function StudentSignIn(req: Request, res: Response) {
         process.env.JWT_SECRET || "MYsuperSECREATpassword" // Optional: Token expiration time
       );
 
-      return res.status(200).json({
+      return {
         msg: "Login successful",
         token, // Return the generated token
-      });
+      }
     }
   } catch (error: any) {
-    res.status(500).json({
-      msg: "Something went wrong",
-      err: error.message || error,
-    });
-    console.log(error);
+    if (error.message) {
+      return error
+    } else {
+      console.log(error)
+      throw new Error("Something went wrong!!")
+    }
   }
 }
-export { StudentSignIn, StudentSignUp };
+export { StudentLogin, StudentSignUp };
