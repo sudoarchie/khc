@@ -1,5 +1,5 @@
 import express from "express";
-import mainRouter from "./router";
+import mainRouter from "./mainrouter";
 const port = process.env.PORT || 3000;
 const app = express();
 app.use(express.json());
