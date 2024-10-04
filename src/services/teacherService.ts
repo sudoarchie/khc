@@ -6,67 +6,67 @@ import HashPassword from "../utils/hashUtils";
 import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
-
-async function TeacherSignUp(req: Request, res: Response) {
+interface teacher {
+  name: string,
+  firstName: string,
+  secondName: string,
+  thirdName: string,
+  email: string,
+  password: string
+}
+async function TeacherSignUp({ name, firstName, secondName, thirdName, email, password }: teacher) {
   console.log(process.env); // Debugging line to see if environment variables are loaded
-  const data = req.body;
 
   try {
-    const hashedPassword = await HashPassword({ password: data.password });
+    const hashedPassword = await HashPassword({ password: password });
     const createdData = await prisma.teacher.create({
       data: {
-        name: data.name,
-        firstName: data.firstName,
-        secondName: data.secondName,
-        thirdName: data.thirdName,
-        email: data.email,
+        name: name,
+        firstName: firstName,
+        secondName: secondName,
+        thirdName: thirdName,
+        email: email,
         password: hashedPassword,
       },
     });
-
-    res.status(200).json({
-      msg: "Teacher created successfully",
-      teacher: createdData, // Optionally return the created teacher data
-    });
+    return ({
+      msg: "Account created successful"
+    })
   } catch (error: any) {
-    res.status(500).json({
-      msg: "Something went wrong",
-      error: error.message || error, // Log the error for debugging
-    });
+    throw new Error("Something went wrong")
   }
 }
 
-async function TeacherSignIn(req: Request, res: Response) {
-  const data = req.body;
+interface teacherSignIn {
+  email: string,
+  password: string
+}
+
+async function TeacherLogin({ email, password }: teacherSignIn) {
+
 
   try {
     const teacher = await prisma.teacher.findUnique({
       where: {
-        email: data.email,
+        email: email,
       },
     });
 
     if (!teacher) {
-      return res.status(401).json({
-        msg: "Username does not exist",
-      });
+      throw new Error("Username does not exist")
     }
 
     const verifyPassword = await bcrypt.compare(
-      data.password,
+      password,
       teacher.password
     );
 
     if (!verifyPassword) {
-      return res.status(401).json({
-        msg: "Incorrect Password",
-      });
+      throw new Error("Incorrect Password")
     } else {
       // Ensure JWT_SECRET is set
       if (!process.env.JWT_SECRET) {
-        return res.status(500).json({
-          msg: "JWT secret is not configured",
-        });
+        throw new Error("JWT secret is not configured");
       }
 
       const token = jwt.sign(
@@ -77,17 +77,18 @@ async function TeacherSignIn(req: Request, res: Response) {
         process.env.JWT_SECRET || "MYsuperSECREATpassword" // Optional: Token expiration time
       );
 
-      return res.status(200).json({
-        msg: "Login successful",
-        token, // Return the generated token
-      });
+
+      return ({
+        msg: "Login Successful",
+        token
+      })
     }
   } catch (error: any) {
-    res.status(500).json({
-      msg: "Something went wrong",
-      err: error.message || error,
-    });
-    console.log(error);
+    if (error.message) {
+      return error
+    } else {
+      throw new Error(error)
+    }
   }
 }
-export { TeacherSignIn, TeacherSignUp };
+export { TeacherLogin, TeacherSignUp };
