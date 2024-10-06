@@ -11,9 +11,9 @@ studentRouter.post("/signup", async (req, res) => {
     res.status(200).json({
       msg: "Account created Successfully",
     })
-  } catch (err) {
+  } catch (err: any) {
     res.status(400).json({
-      msg: err
+      msg: err.message || "Something went wrong!"
     })
   }
 });
@@ -22,9 +22,9 @@ studentRouter.post("/login", async (req, res) => {
   const { email, password } = req.body
   try {
     const token = await StudentLogin({ email, password });
+    res.cookie("token", token)
     res.status(200).json({
       msg: "Login Successfully",
-      token: token
     })
   } catch (err) {
     res.status(403).json({

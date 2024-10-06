@@ -15,7 +15,7 @@ interface Student {
 }
 
 async function StudentSignUp({ email, password, name, mobileNo, country }: Student) {
-  console.log(process.env); // Debugging line to see if environment variables are loaded
+  // console.log(process.env); // Debugging line to see if environment variables are loaded
 
   try {
     const hashedPassword = await HashPassword({ password: password });
@@ -34,7 +34,8 @@ async function StudentSignUp({ email, password, name, mobileNo, country }: Stude
       student: createdData, // Optionally return the created student data
     });
   } catch (error: any) {
-    throw new Error(`Something went wrong ${error}`);
+    // throw new Error(`Something went wrong ${error}`);
+    throw error
   }
 }
 
