@@ -15,9 +15,10 @@ interface Student {
   payment: boolean
   status: boolean,
   videoAllow: boolean
+  curriculumId: string
 }
 
-async function StudentSignUp({ email, password, name, mobileNo, country, payment, status, videoAllow }: Student) {
+async function StudentSignUp({ email, password, name, mobileNo, country, payment, status, videoAllow, curriculumId }: Student) {
   // console.log(process.env); // Debugging line to see if environment variables are loaded
 
   try {
@@ -31,7 +32,8 @@ async function StudentSignUp({ email, password, name, mobileNo, country, payment
         country: country,
         payment: payment,
         status: status,
-        videoAllow: videoAllow
+        videoAllow: videoAllow,
+        curriculumId: curriculumId
       },
     });
 
