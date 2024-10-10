@@ -4,10 +4,10 @@ import { StudentData, StudentLogin, StudentSignUp } from "../services/studentSer
 const studentRouter = express.Router();
 
 studentRouter.post("/signup", async (req, res) => {
-  const { email, mobileNo, name, password, country, payment, status, videoAllow } = req.body
+  const { email, mobileNo, name, password, country, payment, status, videoAllow, curriculumId } = req.body
   try {
 
-    const token = await StudentSignUp({ email, mobileNo, name, password, country, payment, status, videoAllow });
+    const token = await StudentSignUp({ email, mobileNo, name, password, country, payment, status, videoAllow, curriculumId });
     res.status(200).json({
       msg: "Account created Successfully",
     })
