@@ -1,13 +1,13 @@
 import express from "express";
-import { StudentLogin, StudentSignUp } from "../services/studentService";
+import { StudentData, StudentLogin, StudentSignUp } from "../services/studentService";
 
 const studentRouter = express.Router();
 
 studentRouter.post("/signup", async (req, res) => {
-  const { email, mobileNo, name, password, country } = req.body
+  const { email, mobileNo, name, password, country, payment, status, videoAllow } = req.body
   try {
 
-    const token = await StudentSignUp({ email, mobileNo, name, password, country });
+    const token = await StudentSignUp({ email, mobileNo, name, password, country, payment, status, videoAllow });
     res.status(200).json({
       msg: "Account created Successfully",
     })
@@ -33,5 +33,20 @@ studentRouter.post("/login", async (req, res) => {
   }
 
 });
+
+studentRouter.get("/data", async (req, res) => {
+  const { take } = req.body
+  const skip = take - 10;
+  try {
+    const data = await StudentData({ skip, take })
+    res.status(200).json({
+      data: data
+    })
+  } catch (err) {
+    res.status(403).json({
+      msg: err || "Something went wrong!"
+    })
+  }
+})
 
 export default studentRouter;
