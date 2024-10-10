@@ -1,0 +1,7 @@
+model Curriculum {
+  id      String    @id @default(auto()) @map("_id") @db.ObjectId
+  name    String
+  description String
+  logoUrl String
+  student Student[]
+}
