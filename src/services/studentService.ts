@@ -12,9 +12,12 @@ interface Student {
   name: string
   mobileNo: string
   country: string
+  payment: boolean
+  status: boolean,
+  videoAllow: boolean
 }
 
-async function StudentSignUp({ email, password, name, mobileNo, country }: Student) {
+async function StudentSignUp({ email, password, name, mobileNo, country, payment, status, videoAllow }: Student) {
   // console.log(process.env); // Debugging line to see if environment variables are loaded
 
   try {
@@ -26,6 +29,9 @@ async function StudentSignUp({ email, password, name, mobileNo, country }: Stude
         name: name,
         mobileNo: mobileNo,
         country: country,
+        payment: payment,
+        status: status,
+        videoAllow: videoAllow
       },
     });
 
@@ -89,4 +95,19 @@ async function StudentLogin({ email, password }: { email: string, password: stri
     }
   }
 }
-export { StudentLogin, StudentSignUp };
+async function StudentData({ skip, take }: { skip: number, take: number }) {
+  try {
+    const result = await prisma.student.findMany({
+      skip: skip,
+      take: take
+    })
+    return result
+  } catch (err) {
+    if (err)
+      throw err
+    else
+      throw new Error("Something went wrong!!")
+
+  }
+}
+export { StudentLogin, StudentSignUp, StudentData };
