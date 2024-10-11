@@ -34,8 +34,13 @@ subjectRouter.post('/update', async (req, res) => {
   try {
     const { id, name, curriculumId } = req.body
     const data = await UpdateSubject({ id, name, curriculumId })
+    res.status(200).json({
+      msg: 'Subject Updated Successfully'
+    })
   } catch (err) {
-
+    res.status(403).json({
+      msg: `Could not update due to ${err}`
+    })
   }
 })
 

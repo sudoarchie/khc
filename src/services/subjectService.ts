@@ -32,15 +32,23 @@ async function CreateSubject({ name, curriculumId }: Sub) {
       throw new Error('Error while creating data!!')
   }
 }
-async function UpdateSubject({ id }: { id: string }) {
+async function UpdateSubject({ id, name, curriculumId }: { id: string, name: string, curriculumId: string }) {
   try {
-    const data = await prisma.subject.findUnique({
+    const update = await prisma.subject.update({
       where: {
         id: id
+      },
+      data: {
+        name: name,
+        curriculumId: curriculumId
       }
     })
+    return update
   } catch (error) {
-
+    if (error)
+      throw error
+    else
+      throw new Error(`Unable to update!!`)
   }
 }
 
