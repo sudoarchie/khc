@@ -33,11 +33,21 @@ async function Get() {
   try {
     const data = await prisma.curriculum.findMany()
     return {
+      msg: "Data fetched successfully",
       data
     }
-  } catch (err) {
-    throw new Error('Cannot fetch the data due some technical issue please contact the Admin ')
+  } catch (err: unknown) {
+    console.error("Error in Get function:", err);
+    if (err instanceof Error) {
+      return {
+        msg: "Error fetching data",
+        error: err.message
+      }
+    } else {
+      return {
+        msg: "Error fetching data",
+        error: "An unknown error occurred"
+      }
+    }
   }
-}
-
-export { Create, Get }
+} export { Create, Get }

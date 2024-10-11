@@ -1,7 +1,6 @@
 model Subject {
   id           String     @id @default(auto()) @map("_id") @db.ObjectId
   name         String
-  description  String?
   curriculum   Curriculum @relation(fields: [curriculumId], references: [id])
   curriculumId String     @db.ObjectId
   createdAt    DateTime   @default(now())

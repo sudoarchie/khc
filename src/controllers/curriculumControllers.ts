@@ -1,9 +1,7 @@
 import express from 'express'
 import { Get, Create } from '../services/curriculumService'
-const curriculumRouter = express.Router();
-curriculumRouter.get("/data", (req, res) => {
 
-})
+const curriculumRouter = express.Router();
 
 curriculumRouter.post('/add', async (req, res) => {
   const { name, description, logoUrl } = req.body
@@ -15,7 +13,7 @@ curriculumRouter.post('/add', async (req, res) => {
     })
   } catch (err) {
     res.status(403).json({
-      msg: err
+      msg: err instanceof Error ? err.message : 'An unknown error occurred'
     })
   }
 })
@@ -28,7 +26,7 @@ curriculumRouter.get('/data', async (req, res) => {
     })
   } catch (err) {
     res.status(403).json({
-      msg: err || `Something went wrong!!`
+      msg: err instanceof Error ? err.message : 'Something went wrong!!'
     })
   }
 })
