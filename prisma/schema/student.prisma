@@ -1,14 +1,15 @@
 model Student {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  email        String   @unique
-  mobileNo     String   @unique
+  id           String       @id @default(auto()) @map("_id") @db.ObjectId
+  email        String       @unique
+  mobileNo     String       @unique
   country      String
   name         String
   password     String
   payment      Boolean
   status       Boolean
   videoAllow   Boolean
-  curriculum Curriculum @relation(fields: [curriculumId], references: [id])
-  curriculumId String   @db.ObjectId
-  createdAt    DateTime @default(now())
+  curriculum   Curriculum   @relation(fields: [curriculumId], references: [id])
+  curriculumId String       @db.ObjectId
+  Enrollment   Enrollment[]
+  createdAt    DateTime     @default(now())
 }

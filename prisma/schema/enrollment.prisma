@@ -1,0 +1,12 @@
+model Enrollment {
+    id             String     @id @default(auto()) @map("_id") @db.ObjectId
+    student        Student    @relation(fields: [studentId], references: [id])
+    studentId      String     @db.ObjectId
+    curriculum     Curriculum @relation(fields: [curriculumId], references: [id])
+    curriculumId   String     @db.ObjectId
+    enrollmentDate DateTime   @default(now())
+    createdAt      DateTime   @default(now())
+    updatedAt      DateTime   @updatedAt
+
+    @@unique([studentId, curriculumId])
+}
