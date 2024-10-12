@@ -1,52 +1,75 @@
 import express from "express";
-import { StudentData, StudentLogin, StudentSignUp } from "../services/studentService";
+import {
+  StudentData,
+  StudentLogin,
+  StudentSignUp,
+} from "../services/studentService";
+import { AuthAdmin } from "../middlewares/adminauthmiddleware";
 
 const studentRouter = express.Router();
 
 studentRouter.post("/signup", async (req, res) => {
-  const { email, mobileNo, name, password, country, payment, status, videoAllow, curriculumId } = req.body
+  const {
+    email,
+    mobileNo,
+    name,
+    password,
+    country,
+    payment,
+    status,
+    videoAllow,
+    curriculumId,
+  } = req.body;
   try {
-
-    const token = await StudentSignUp({ email, mobileNo, name, password, country, payment, status, videoAllow, curriculumId });
+    const token = await StudentSignUp({
+      email,
+      mobileNo,
+      name,
+      password,
+      country,
+      payment,
+      status,
+      videoAllow,
+      curriculumId,
+    });
     res.status(200).json({
       msg: "Account created Successfully",
-    })
+    });
   } catch (err: any) {
     res.status(400).json({
-      msg: err.message || "Something went wrong!"
-    })
+      msg: err.message || "Something went wrong!",
+    });
   }
 });
 
 studentRouter.post("/login", async (req, res) => {
-  const { email, password } = req.body
+  const { email, password } = req.body;
   try {
     const token = await StudentLogin({ email, password });
-    res.cookie("token", token)
+    res.cookie("studenttoken", token);
     res.status(200).json({
       msg: "Login Successfully",
-    })
+    });
   } catch (err) {
     res.status(403).json({
-      msg: err
-    })
+      msg: err,
+    });
   }
-
 });
 
-studentRouter.get("/data", async (req, res) => {
-  const { take } = req.body
+studentRouter.get("/data", AuthAdmin, async (req, res) => {
+  const { take } = req.body;
   const skip = take - 10;
   try {
-    const data = await StudentData({ skip, take })
+    const data = await StudentData({ skip, take });
     res.status(200).json({
-      data: data
-    })
+      data: data,
+    });
   } catch (err) {
     res.status(403).json({
-      msg: err || "Something went wrong!"
-    })
+      msg: err || "Something went wrong!",
+    });
   }
-})
+});
 
 export default studentRouter;

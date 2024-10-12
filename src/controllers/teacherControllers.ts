@@ -23,7 +23,7 @@ teacherRouter.post("/login", async (req, res) => {
   try {
 
     const token = await TeacherLogin({ email, password });
-    res.cookie("token", token)
+    res.cookie("teachertoken", token)
     res.status(200).json({
       msg: "Login Successful!!",
     })

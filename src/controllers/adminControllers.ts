@@ -9,7 +9,7 @@ adminRouter.post("/login", async (req, res) => {
 
     const token = await AdminSignIn({ email, password })
     console.log(token)
-    res.cookie("token", token)
+    res.cookie("admintoken", token)
     res.status(200).json({
       msg: "Login Successful!!"
     })
