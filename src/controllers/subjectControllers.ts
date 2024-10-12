@@ -1,5 +1,5 @@
 import express from "express";
-import { CreateSubject, GetSubject, UpdateSubject } from "../services/subjectService";
+import { CreateSubject, DeleteSubject, GetSubject, UpdateSubject } from "../services/subjectService";
 
 const subjectRouter = express.Router()
 
@@ -40,6 +40,19 @@ subjectRouter.post('/update', async (req, res) => {
   } catch (err) {
     res.status(403).json({
       msg: `Could not update due to ${err}`
+    })
+  }
+})
+subjectRouter.delete('/delete', async (req, res) => {
+  try {
+    const { id } = req.body
+    const data = await DeleteSubject({ id })
+    res.status(200).json({
+      msg: `Subject Deleted Successfully`
+    })
+  } catch (error) {
+    res.status(403).json({
+      msg: "something went wrong"
     })
   }
 })

@@ -52,4 +52,17 @@ async function UpdateSubject({ id, name, curriculumId }: { id: string, name: str
   }
 }
 
-export { GetSubject, CreateSubject, UpdateSubject }
+async function DeleteSubject({ id }: { id: string }) {
+  try {
+    const deletedSubject = await prisma.subject.delete({
+      where: {
+        id: id,
+      },
+    });
+    return deletedSubject;
+  } catch (error) {
+    throw new Error(`Unable to delete subject with id ${id}: ${error}`);
+  }
+}
+
+export { GetSubject, CreateSubject, UpdateSubject, DeleteSubject }
