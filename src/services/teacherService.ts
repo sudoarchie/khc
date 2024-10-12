@@ -33,7 +33,10 @@ async function TeacherSignUp({ name, firstName, secondName, thirdName, email, pa
       msg: "Account created successful"
     })
   } catch (error: any) {
-    throw new Error("Something went wrong")
+    if (error)
+      throw error
+    else
+      throw new Error("Something went wrong")
   }
 }
 

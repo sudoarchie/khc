@@ -1,9 +1,10 @@
 import express from 'express'
 import { Get, Create } from '../services/curriculumService'
+import { AuthAdmin } from '../middlewares/adminauthmiddleware';
 
 const curriculumRouter = express.Router();
 
-curriculumRouter.post('/add', async (req, res) => {
+curriculumRouter.post('/add', AuthAdmin, async (req, res) => {
   const { name, description, logoUrl } = req.body
   try {
     const data = await Create({ name, description, logoUrl })

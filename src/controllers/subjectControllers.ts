@@ -1,5 +1,6 @@
 import express from "express";
 import { CreateSubject, DeleteSubject, GetSubject, UpdateSubject } from "../services/subjectService";
+import { AuthAdmin } from "../middlewares/adminauthmiddleware";
 
 const subjectRouter = express.Router()
 
@@ -17,7 +18,7 @@ subjectRouter.get('/data', async (req, res) => {
   }
 })
 
-subjectRouter.post('/add', async (req, res) => {
+subjectRouter.post('/add', AuthAdmin, async (req, res) => {
   try {
     const { name, curriculumId } = req.body
     const data = await CreateSubject({ name, curriculumId })
@@ -30,7 +31,7 @@ subjectRouter.post('/add', async (req, res) => {
     })
   }
 })
-subjectRouter.post('/update', async (req, res) => {
+subjectRouter.post('/update', AuthAdmin, async (req, res) => {
   try {
     const { id, name, curriculumId } = req.body
     const data = await UpdateSubject({ id, name, curriculumId })
@@ -43,7 +44,7 @@ subjectRouter.post('/update', async (req, res) => {
     })
   }
 })
-subjectRouter.delete('/delete', async (req, res) => {
+subjectRouter.delete('/delete', AuthAdmin, async (req, res) => {
   try {
     const { id } = req.body
     const data = await DeleteSubject({ id })
