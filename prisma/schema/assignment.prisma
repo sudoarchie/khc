@@ -1,0 +1,10 @@
+model Assignment {
+  id                String              @id @default(auto()) @map("_id") @db.ObjectId
+  name              String
+  description       String
+  url               String
+  subject           Subject             @relation(fields: [subjectId], references: [id])
+  subjectId         String              @db.ObjectId
+  studentAssignment StudentAssignment[]
+  createdAt         DateTime            @default(now())
+}
