@@ -1,8 +1,9 @@
 import express from 'express'
 import { AuthAdmin } from '../middlewares/adminauthmiddleware'
 import { AuthStudent } from '../middlewares/studentauthmiddleware'
-import { AddAssignment, GetAssignment } from '../services/assignmentService'
+import { AddAssignment, AssignStudent, GetAssignment } from '../services/assignmentService'
 import ExtractId from '../utils/extractIdfromToken'
+import { AuthTeacher } from '../middlewares/teacherauthmiddleware'
 
 const AssignmentRouter = express.Router()
 
@@ -23,7 +24,7 @@ AssignmentRouter.get("/", AuthStudent, async (req, res) => {
     })
   }
 })
-AssignmentRouter.post("/add", async (req, res) => {
+AssignmentRouter.post("/add", AuthAdmin, async (req, res) => {
   try {
     const { name, description, url, subjectId } = req.body
     const data = await AddAssignment({ name, description, url, subjectId })
@@ -37,6 +38,21 @@ AssignmentRouter.post("/add", async (req, res) => {
   }
 })
 
-AssignmentRouter.post("/add",)
+AssignmentRouter.post("/addbyteacher", AuthTeacher, async (req, res) => {
+  try {
+    const { name, description, url, subjectId, studentId } = req.body
+    const data = await AddAssignment({ name, description, url, subjectId })
+    const assignmentId = data.id
+    const newData = await AssignStudent({ studentId, assignmentId })
+    res.status(200).json({
+      msg: `Assignment assigned to Student`
+    })
+  } catch (err) {
+    res.status(403).json({
+      msg: `Error while creating new assignment`
+    })
+  }
+
+})
 
 export default AssignmentRouter
