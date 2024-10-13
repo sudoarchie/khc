@@ -21,8 +21,12 @@ async function GetAssignment({ StudentId, take }: GetAssignment) {
       where: {
         studentId: StudentId
       },
-      take: take
+      take: take,
+      include: {
+        assignment: true
+      }
     })
+
     return data
   } catch (err) {
     if (err)
