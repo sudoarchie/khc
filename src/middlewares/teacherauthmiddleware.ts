@@ -7,7 +7,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'MYsuperSECRETpassword';
 
 export function AuthTeacher(req: Request, res: Response, next: NextFunction): any {
   const token = req.cookies.teachertoken;
-
+  console.log(token)
   if (!token) {
     return res.status(401).json({
       msg: "Cookies not found!!",
@@ -16,7 +16,7 @@ export function AuthTeacher(req: Request, res: Response, next: NextFunction): an
 
   try {
     // Verify the token with the secret key
-    const verified = jwt.verify(token, JWT_SECRET);
+    const verified = jwt.verify(token.token, JWT_SECRET);
 
     if (!verified) {
       return res.status(401).json({
