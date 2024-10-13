@@ -5,8 +5,8 @@ import jwt from 'jsonwebtoken';
 // Secret key (should be in an environment variable)
 const JWT_SECRET = process.env.JWT_SECRET || 'MYsuperSECRETpassword';
 
-export function AuthStudent(req: Request, res: Response, next: NextFunction) {
-  const token = req.cookies.admintoken;
+export function AuthStudent(req: Request, res: Response, next: NextFunction): any {
+  const token = req.cookies.studenttoken;
 
   if (!token) {
     return res.status(401).json({
