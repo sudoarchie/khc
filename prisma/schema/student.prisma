@@ -1,15 +1,16 @@
 model Student {
-  id           String       @id @default(auto()) @map("_id") @db.ObjectId
-  email        String       @unique
-  mobileNo     String       @unique
-  country      String
-  name         String
-  password     String
-  payment      Boolean
-  status       Boolean
-  videoAllow   Boolean
-  curriculum   Curriculum   @relation(fields: [curriculumId], references: [id])
-  curriculumId String       @db.ObjectId
-  Enrollment   Enrollment[]
-  createdAt    DateTime     @default(now())
+  id                String              @id @default(auto()) @map("_id") @db.ObjectId
+  email             String              @unique
+  mobileNo          String              @unique
+  country           String
+  name              String
+  password          String
+  payment           Boolean
+  status            Boolean
+  videoAllow        Boolean
+  curriculum        Curriculum          @relation(fields: [curriculumId], references: [id])
+  curriculumId      String              @db.ObjectId
+  Enrollment        Enrollment[]
+  StudentAssignment StudentAssignment[]
+  createdAt         DateTime            @default(now())
 }
