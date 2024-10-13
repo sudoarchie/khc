@@ -11,6 +11,7 @@ interface CreateSub {
   description: string,
   url: string,
   subjectId: string
+  visible: boolean
 }
 
 
@@ -36,14 +37,15 @@ async function GetAssignment({ StudentId, take }: GetAssignment) {
   }
 }
 
-async function AddAssignment({ name, description, url, subjectId }: CreateSub) {
+async function AddAssignment({ name, description, url, subjectId, visible }: CreateSub) {
   try {
     const data = await prisma.assignment.create({
       data: {
         name,
         description,
         url,
-        subjectId
+        subjectId,
+        visible
       }
     })
     return data
