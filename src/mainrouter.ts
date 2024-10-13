@@ -4,6 +4,7 @@ import studentRouter from "./controllers/studentControllers"
 import adminRouter from "./controllers/adminControllers"
 import curriculumRouter from "./controllers/curriculumControllers"
 import subjectRouter from "./controllers/subjectControllers"
+import AssignmentRouter from "./controllers/assignmentControllers"
 
 const mainRouter = express.Router()
 
@@ -12,4 +13,5 @@ mainRouter.use('/student', studentRouter)
 mainRouter.use('/admin', adminRouter)
 mainRouter.use('/curriculum', curriculumRouter)
 mainRouter.use('/subject', subjectRouter)
+mainRouter.use('/assignment', AssignmentRouter)
 export default mainRouter
