@@ -27,7 +27,8 @@ AssignmentRouter.get("/", AuthStudent, async (req, res) => {
 AssignmentRouter.post("/add", AuthAdmin, async (req, res) => {
   try {
     const { name, description, url, subjectId } = req.body
-    const data = await AddAssignment({ name, description, url, subjectId })
+    const visible = true
+    const data = await AddAssignment({ name, description, url, subjectId, visible })
     res.status(200).json({
       msg: `Assignment created successfully`
     })
@@ -41,7 +42,8 @@ AssignmentRouter.post("/add", AuthAdmin, async (req, res) => {
 AssignmentRouter.post("/addbyteacher", AuthTeacher, async (req, res) => {
   try {
     const { name, description, url, subjectId, studentId } = req.body
-    const data = await AddAssignment({ name, description, url, subjectId })
+    const visible = false
+    const data = await AddAssignment({ name, description, url, subjectId, visible })
     const assignmentId = data.id
     const newData = await AssignStudent({ studentId, assignmentId })
     res.status(200).json({
@@ -53,6 +55,20 @@ AssignmentRouter.post("/addbyteacher", AuthTeacher, async (req, res) => {
     })
   }
 
+})
+
+AssignmentRouter.post("/assign", AuthTeacher, async (req, res) => {
+  try {
+    const { assignmentId, studentId } = req.body
+    const data = await AssignStudent({ studentId, assignmentId })
+    res.status(200).json({
+      msg: `Assigned to Student`
+    })
+  } catch (err) {
+    res.status(403).json({
+      msg: `Error while Assigning to student`
+    })
+  }
 })
 
 export default AssignmentRouter
