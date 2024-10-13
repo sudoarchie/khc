@@ -51,4 +51,22 @@ async function AddAssignment({ name, description, url, subjectId }: CreateSub) {
   }
 }
 
-export { GetAssignment, AddAssignment }
+async function AssignStudent({ studentId, assignmentId }: { studentId: string, assignmentId: string }) {
+  try {
+    const data = await prisma.studentAssignment.create({
+      data: {
+        studentId,
+        assignmentId
+      }
+    })
+    return data
+  } catch (err) {
+    if (err)
+      throw err
+    else
+      throw new Error('Cannot Assign to Student!!');
+  }
+
+}
+
+export { GetAssignment, AddAssignment, AssignStudent }
