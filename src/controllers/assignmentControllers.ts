@@ -1,7 +1,7 @@
 import express from 'express'
 import { AuthAdmin } from '../middlewares/adminauthmiddleware'
 import { AuthStudent } from '../middlewares/studentauthmiddleware'
-import { AddAssignment, AssignStudent, GetAssignment } from '../services/assignmentService'
+import { AddAssignment, AssignStudent, GetAssignment, SpecialAssignment } from '../services/assignmentService'
 import ExtractId from '../utils/extractIdfromToken'
 import { AuthTeacher } from '../middlewares/teacherauthmiddleware'
 
@@ -38,6 +38,20 @@ AssignmentRouter.post("/add", AuthAdmin, async (req, res) => {
     })
   }
 })
+AssignmentRouter.get('/special', AuthTeacher, async (req, res) => {
+  try {
+    const { subjectId } = req.body
+    const data = SpecialAssignment({ subjectId })
+    res.status(200).json({
+      data
+    })
+  } catch (err) {
+    res.status(403).json({
+      msg: `Cannot fetch ${err}`
+    })
+  }
+})
+
 
 AssignmentRouter.post("/addbyteacher", AuthTeacher, async (req, res) => {
   try {

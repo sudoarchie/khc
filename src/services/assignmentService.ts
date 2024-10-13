@@ -75,4 +75,21 @@ async function AssignStudent({ studentId, assignmentId }: { studentId: string, a
 
 }
 
-export { GetAssignment, AddAssignment, AssignStudent }
+async function SpecialAssignment({ subjectId }: { subjectId: string }) {
+  try {
+    const data = await prisma.assignment.findMany({
+      where: {
+        subjectId,
+        visible: true
+      }
+    })
+    return data
+  } catch (err) {
+    if (err)
+      throw err
+    else
+      throw new Error("Error while fetching the data")
+  }
+}
+
+export { GetAssignment, AddAssignment, AssignStudent, SpecialAssignment }
