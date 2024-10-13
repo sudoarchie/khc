@@ -3,6 +3,7 @@ model Assignment {
   name              String
   description       String
   url               String
+  visible           Boolean             @default(false)
   subject           Subject             @relation(fields: [subjectId], references: [id])
   subjectId         String              @db.ObjectId
   studentAssignment StudentAssignment[]
