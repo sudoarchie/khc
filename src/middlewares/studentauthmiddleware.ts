@@ -16,7 +16,7 @@ export function AuthStudent(req: Request, res: Response, next: NextFunction): an
 
   try {
     // Verify the token with the secret key
-    const verified = jwt.verify(token, JWT_SECRET);
+    const verified = jwt.verify(token.token, JWT_SECRET);
 
     if (!verified) {
       return res.status(401).json({
