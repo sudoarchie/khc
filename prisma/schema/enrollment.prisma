@@ -1,12 +1,12 @@
 model Enrollment {
-    id             String     @id @default(auto()) @map("_id") @db.ObjectId
-    student        Student    @relation(fields: [studentId], references: [id])
-    studentId      String     @db.ObjectId
-    curriculum     Curriculum @relation(fields: [curriculumId], references: [id])
-    curriculumId   String     @db.ObjectId
-    enrollmentDate DateTime   @default(now())
-    createdAt      DateTime   @default(now())
-    updatedAt      DateTime   @updatedAt
+  id             String     @id @default(auto()) @map("_id") @db.ObjectId
+  student        Student    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId      String     @db.ObjectId
+  curriculum     Curriculum @relation(fields: [curriculumId], references: [id], onDelete: Cascade)
+  curriculumId   String     @db.ObjectId
+  enrollmentDate DateTime   @default(now())
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
 
-    @@unique([studentId, curriculumId])
+  @@unique([studentId, curriculumId])
 }

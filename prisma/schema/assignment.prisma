@@ -4,7 +4,7 @@ model Assignment {
   description       String
   url               String
   visible           Boolean             @default(false)
-  subject           Subject             @relation(fields: [subjectId], references: [id])
+  subject           Subject             @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   subjectId         String              @db.ObjectId
   studentAssignment StudentAssignment[]
   createdAt         DateTime            @default(now())
