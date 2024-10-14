@@ -77,6 +77,7 @@ async function AssignStudent({ studentId, assignmentId }: { studentId: string, a
 
 async function SpecialAssignment({ subjectId }: { subjectId: string }) {
   try {
+
     const data = await prisma.assignment.findMany({
       where: {
         subjectId,

@@ -41,7 +41,7 @@ AssignmentRouter.post("/add", AuthAdmin, async (req, res) => {
 AssignmentRouter.get('/special', AuthTeacher, async (req, res) => {
   try {
     const { subjectId } = req.body
-    const data = SpecialAssignment({ subjectId })
+    const data = await SpecialAssignment({ subjectId })
     res.status(200).json({
       data
     })
