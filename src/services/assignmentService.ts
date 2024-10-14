@@ -44,7 +44,7 @@ async function AddAssignment({ name, description, url, subjectId, visible }: Cre
         name,
         description,
         url,
-        subjectId,
+        subjectId: subjectId,
         visible
       }
     })
