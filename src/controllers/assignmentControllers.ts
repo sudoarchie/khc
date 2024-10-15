@@ -89,9 +89,19 @@ AssignmentRouter.get("/special", AuthTeacher, async (req, res) => {
   }
 });
 
-AssignmentRouter.post("/addbyteacher", AuthTeacher, async (req, res) => {
+AssignmentRouter.post("/addbyteacher", AuthTeacher, upload.single('file'), async (req, res) => {
   try {
-    const { name, description, url, subjectId, studentId } = req.body;
+    const { name, description, subjectId, studentId } = req.body;
+
+    if (!req.file) {
+      res.status(400).json({
+        msg: "No file uploaded",
+      });
+      return;
+    }
+    const file = req.file as Express.MulterS3.File;
+    const url = file.location;
+
     const visible = false;
     const data = await AddAssignment({
       name,
