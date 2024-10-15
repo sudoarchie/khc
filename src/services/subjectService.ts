@@ -1,19 +1,21 @@
-import { PrismaClient } from "@prisma/client"
+import { PrismaClient } from "@prisma/client";
 interface Sub {
-  name: string
-  curriculumId: string
+  name: string;
+  curriculumId: string;
 }
 
-const prisma = new PrismaClient()
-async function GetSubject() {
+const prisma = new PrismaClient();
+async function GetSubject({ curriculumId }: { curriculumId: string }) {
   try {
-    const data = await prisma.subject.findMany()
-    return data
+    const data = await prisma.subject.findMany({
+      where: {
+        curriculumId,
+      },
+    });
+    return data;
   } catch (err) {
-    if (err)
-      throw err
-    else
-      throw new Error(`Something went wrong!!`)
+    if (err) throw err;
+    else throw new Error(`Something went wrong!!`);
   }
 }
 async function CreateSubject({ name, curriculumId }: Sub) {
@@ -21,34 +23,38 @@ async function CreateSubject({ name, curriculumId }: Sub) {
     const create = await prisma.subject.create({
       data: {
         name: name,
-        curriculumId: curriculumId
-      }
-    })
-    return create
+        curriculumId: curriculumId,
+      },
+    });
+    return create;
   } catch (err) {
-    if (err)
-      throw err
-    else
-      throw new Error('Error while creating data!!')
+    if (err) throw err;
+    else throw new Error("Error while creating data!!");
   }
 }
-async function UpdateSubject({ id, name, curriculumId }: { id: string, name: string, curriculumId: string }) {
+async function UpdateSubject({
+  id,
+  name,
+  curriculumId,
+}: {
+  id: string;
+  name: string;
+  curriculumId: string;
+}) {
   try {
     const update = await prisma.subject.update({
       where: {
-        id: id
+        id: id,
       },
       data: {
         name: name,
-        curriculumId: curriculumId
-      }
-    })
-    return update
+        curriculumId: curriculumId,
+      },
+    });
+    return update;
   } catch (error) {
-    if (error)
-      throw error
-    else
-      throw new Error(`Unable to update!!`)
+    if (error) throw error;
+    else throw new Error(`Unable to update!!`);
   }
 }
 
@@ -65,4 +71,4 @@ async function DeleteSubject({ id }: { id: string }) {
   }
 }
 
-export { GetSubject, CreateSubject, UpdateSubject, DeleteSubject }
+export { GetSubject, CreateSubject, UpdateSubject, DeleteSubject };
