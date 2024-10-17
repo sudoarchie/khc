@@ -17,8 +17,8 @@ const signupSchema = z.object({
   payment: z.boolean(),
   status: z.boolean(),
   videoAllow: z.boolean(),
-  curriculumId: z.string()
-})
+  curriculumId: z.string(),
+});
 studentRouter.post("/signup", async (req, res) => {
   const {
     email,
@@ -32,13 +32,22 @@ studentRouter.post("/signup", async (req, res) => {
     curriculumId,
   } = req.body;
   try {
-    const validateSchema = signupSchema.safeParse({ email, mobileNo, name, password, country, payment, status, videoAllow, curriculumId })
+    const validateSchema = signupSchema.safeParse({
+      email,
+      mobileNo,
+      name,
+      password,
+      country,
+      payment,
+      status,
+      videoAllow,
+      curriculumId,
+    });
     if (!validateSchema.success) {
       res.status(403).json({
-        msg: `Invalid Input `
-      })
+        msg: `Invalid Input `,
+      });
     } else {
-
       const token = await StudentSignUp({
         email,
         mobileNo,
@@ -64,15 +73,21 @@ studentRouter.post("/signup", async (req, res) => {
 studentRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
-    const token = await StudentLogin({ email, password });
-    res.cookie("studenttoken", token);
+    const result = await StudentLogin({ email, password });
+    res.cookie("studenttoken", result.token);
     res.status(200).json({
-      msg: "Login Successfully",
+      msg: result.msg,
     });
   } catch (err) {
-    res.status(403).json({
-      msg: err,
-    });
+    if (err instanceof Error) {
+      res.status(403).json({
+        msg: err.message,
+      });
+    } else {
+      res.status(500).json({
+        msg: "An unexpected error occurred",
+      });
+    }
   }
 });
 

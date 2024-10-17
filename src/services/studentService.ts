@@ -7,18 +7,28 @@ import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 interface Student {
-  email: string
-  password: string
-  name: string
-  mobileNo: string
-  country: string
-  payment: boolean
-  status: boolean,
-  videoAllow: boolean
-  curriculumId: string
+  email: string;
+  password: string;
+  name: string;
+  mobileNo: number;
+  country: string;
+  payment: boolean;
+  status: boolean;
+  videoAllow: boolean;
+  curriculumId: string;
 }
 
-async function StudentSignUp({ email, password, name, mobileNo, country, payment, status, videoAllow, curriculumId }: Student) {
+async function StudentSignUp({
+  email,
+  password,
+  name,
+  mobileNo,
+  country,
+  payment,
+  status,
+  videoAllow,
+  curriculumId,
+}: Student) {
   // console.log(process.env); // Debugging line to see if environment variables are loaded
 
   try {
@@ -33,83 +43,73 @@ async function StudentSignUp({ email, password, name, mobileNo, country, payment
         payment: payment,
         status: status,
         videoAllow: videoAllow,
-        curriculumId: curriculumId
+        curriculumId: curriculumId,
       },
     });
 
-    return ({
+    return {
       msg: "Student created successfully",
       student: createdData, // Optionally return the created student data
-    });
+    };
   } catch (error: any) {
     // throw new Error(`Something went wrong ${error}`);
-    throw error
+    throw error;
   }
 }
 
-async function StudentLogin({ email, password }: { email: string, password: string }) {
-
-
+async function StudentLogin({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) {
   if (!email || !password) {
-    throw new Error("Invalid Email or Password")
+    throw new Error("Invalid Email or Password");
   }
-  try {
-    const student = await prisma.student.findUnique({
-      where: { email },
-    });
 
-    if (!student) {
-      throw new Error("Invalid User")
-    }
+  const student = await prisma.student.findUnique({
+    where: { email },
+  });
 
-    const verifyPassword = await bcrypt.compare(
-      password,
-      student.password
-    );
-
-    if (!verifyPassword) {
-      throw new Error("Invalid Username or Password")
-    } else {
-      // Ensure JWT_SECRET is set
-      if (!process.env.JWT_SECRET) {
-        throw new Error("JWT is not configured")
-      }
-
-      const token = jwt.sign(
-        {
-          id: student.id,
-          email: student.email,
-        },
-        process.env.JWT_SECRET || "MYsuperSECREATpassword" // Optional: Token expiration time
-      );
-
-      return {
-        msg: "Login successful",
-        token, // Return the generated token
-      }
-    }
-  } catch (error: any) {
-    if (error.message) {
-      return error
-    } else {
-      console.log(error)
-      throw new Error("Something went wrong!!")
-    }
+  if (!student) {
+    throw new Error("Invalid User");
   }
+
+  const verifyPassword = await bcrypt.compare(password, student.password);
+
+  if (!verifyPassword) {
+    throw new Error("Invalid Username or Password");
+  }
+
+  if (!process.env.JWT_SECRET) {
+    throw new Error("JWT is not configured");
+  }
+
+  const token = jwt.sign(
+    {
+      id: student.id,
+      email: student.email,
+    },
+    process.env.JWT_SECRET
+  );
+
+  return {
+    msg: "Login successful",
+    token,
+  };
 }
-async function StudentData({ skip, take }: { skip: number, take: number }) {
+
+async function StudentData({ skip, take }: { skip: number; take: number }) {
   try {
     const result = await prisma.student.findMany({
       skip: skip,
-      take: take
-    })
-    return result
+      take: take,
+    });
+    return result;
   } catch (err) {
-    if (err)
-      throw err
-    else
-      throw new Error("Something went wrong!!")
-
+    if (err) throw err;
+    else throw new Error("Something went wrong!!");
   }
 }
 export { StudentLogin, StudentSignUp, StudentData };
