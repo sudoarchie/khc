@@ -70,14 +70,27 @@ studentRouter.post("/signup", async (req, res) => {
   }
 });
 
+const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8, 'Password length should be greater then 8')
+})
 studentRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;
+
   try {
-    const result = await StudentLogin({ email, password });
-    res.cookie("studenttoken", result.token);
-    res.status(200).json({
-      msg: result.msg,
-    });
+    const validateSchema = loginSchema.safeParse({ email, password })
+    if (!validateSchema.success) {
+      res.status(403).json({
+        msg: `Invalid Input`
+      })
+    } else {
+
+      const result = await StudentLogin({ email, password });
+      res.cookie("studenttoken", result.token);
+      res.status(200).json({
+        msg: result.msg,
+      });
+    }
   } catch (err) {
     if (err instanceof Error) {
       res.status(403).json({
