@@ -6,7 +6,7 @@ import {
   UpdateSubject,
 } from "../services/subjectService";
 import { AuthAdmin } from "../middlewares/adminauthmiddleware";
-
+import { z } from "zod";
 const subjectRouter = express.Router();
 
 subjectRouter.get("/data", async (req, res) => {
@@ -22,14 +22,25 @@ subjectRouter.get("/data", async (req, res) => {
     });
   }
 });
-
+const addSchema = z.object({
+  name: z.string(),
+  curriculumId: z.string()
+})
 subjectRouter.post("/add", AuthAdmin, async (req, res) => {
   try {
     const { name, curriculumId } = req.body;
-    const data = await CreateSubject({ name, curriculumId });
-    res.status(200).json({
-      msg: "Subject Created Successfully",
-    });
+    const validateSchema = addSchema.safeParse({ name, curriculumId })
+    if (!validateSchema.success) {
+      res.status(403).json({
+        msg: `Invalid Input`
+      })
+    } else {
+
+      const data = await CreateSubject({ name, curriculumId });
+      res.status(200).json({
+        msg: "Subject Created Successfully",
+      });
+    }
   } catch (error) {
     res.status(403).json({
       msg: `Could not create subject due to ${error}`,
