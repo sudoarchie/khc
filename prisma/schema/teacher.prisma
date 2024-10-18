@@ -1,9 +1,9 @@
 model Teacher {
-  id         String @id @default(uuid()) @map("_id")
-  name       String
-  firstName  String
-  secondName String
-  thirdName  String
-  email      String @unique
-  password   String
+  id          String @id @default(uuid()) @map("_id")
+  name        String
+  firstName   String
+  secoundName String
+  thirdName   String
+  email       String @unique
+  password    String
 }

@@ -9,12 +9,12 @@ const prisma = new PrismaClient();
 interface teacher {
   name: string,
   firstName: string,
-  secondName: string,
+  secoundName: string,
   thirdName: string,
   email: string,
   password: string
 }
-async function TeacherSignUp({ name, firstName, secondName, thirdName, email, password }: teacher) {
+async function TeacherSignUp({ name, firstName, secoundName, thirdName, email, password }: teacher) {
   console.log(process.env); // Debugging line to see if environment variables are loaded
 
   try {
@@ -23,7 +23,7 @@ async function TeacherSignUp({ name, firstName, secondName, thirdName, email, pa
       data: {
         name: name,
         firstName: firstName,
-        secondName: secondName,
+        secoundName: secoundName,
         thirdName: thirdName,
         email: email,
         password: hashedPassword,
