@@ -33,15 +33,26 @@ teacherRouter.post("/signup", async (req, res) => {
   }
 });
 
+const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8, `Lenght of string must be greater then 8`)
+})
 teacherRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
+    const verifySchema = loginSchema.safeParse({ email, password })
+    if (!verifySchema.success) {
+      res.status(403).json({
+        msg: `Invalid Schema`
+      })
+    } else {
 
-    const token = await TeacherLogin({ email, password });
-    res.cookie("teachertoken", token)
-    res.status(200).json({
-      msg: "Login Successful!!",
-    })
+      const token = await TeacherLogin({ email, password });
+      res.cookie("teachertoken", token)
+      res.status(200).json({
+        msg: "Login Successful!!",
+      })
+    }
   } catch (err) {
     res.status(403).json({
       msg: err
