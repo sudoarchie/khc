@@ -74,14 +74,24 @@ subjectRouter.post("/update", AuthAdmin, async (req, res) => {
     });
   }
 });
-
+const deleteSchema = z.object({
+  id: z.string()
+})
 subjectRouter.delete("/delete", AuthAdmin, async (req, res) => {
   try {
     const { id } = req.body;
-    const data = await DeleteSubject({ id });
-    res.status(200).json({
-      msg: `Subject Deleted Successfully`,
-    });
+    const validateSchema = deleteSchema.safeParse({ id })
+    if (!validateSchema.success) {
+      res.status(403).json({
+        msg: `Invalid Input id`
+      })
+    } else {
+
+      const data = await DeleteSubject({ id });
+      res.status(200).json({
+        msg: `Subject Deleted Successfully`,
+      });
+    }
   } catch (error) {
     res.status(403).json({
       msg: "something went wrong",
