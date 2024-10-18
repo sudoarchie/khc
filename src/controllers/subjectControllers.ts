@@ -47,19 +47,34 @@ subjectRouter.post("/add", AuthAdmin, async (req, res) => {
     });
   }
 });
+
+const updateSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  curriculumId: z.string()
+})
 subjectRouter.post("/update", AuthAdmin, async (req, res) => {
   try {
     const { id, name, curriculumId } = req.body;
-    const data = await UpdateSubject({ id, name, curriculumId });
-    res.status(200).json({
-      msg: "Subject Updated Successfully",
-    });
+
+    const validateSchema = updateSchema.safeParse({ id, name, curriculumId })
+    if (!validateSchema.success) {
+      res.status(403).json({
+        msg: `Invalid Input`
+      })
+    } else {
+      const data = await UpdateSubject({ id, name, curriculumId });
+      res.status(200).json({
+        msg: "Subject Updated Successfully",
+      });
+    }
   } catch (err) {
     res.status(403).json({
       msg: `Could not update due to ${err}`,
     });
   }
 });
+
 subjectRouter.delete("/delete", AuthAdmin, async (req, res) => {
   try {
     const { id } = req.body;
