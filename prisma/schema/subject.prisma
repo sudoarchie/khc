@@ -1,9 +1,10 @@
 model Subject {
-  id           String       @id @default(auto()) @map("_id") @db.ObjectId
-  name         String
-  curriculum   Curriculum   @relation(fields: [curriculumId], references: [id], onDelete: Cascade)
-  curriculumId String       @db.ObjectId
-  assignment   Assignment[]
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  id         String       @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  grade      Grade        @relation(fields: [gradeId], references: [id], onDelete: Cascade)
+  gradeId    String       @db.ObjectId
+  assignment Assignment[]
+  enrollment Enrollment[]
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
 }
