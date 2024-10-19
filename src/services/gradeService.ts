@@ -36,4 +36,23 @@ async function GetAllGrades({ take }: { take: number }) {
   }
 }
 
-export { CreateGrade, GetAllGrades };
+async function GetGradeByCurriculum({
+  curriculumId,
+}: {
+  curriculumId: string;
+}) {
+  try {
+    const data = await prisma.grade.findMany({
+      where: {
+        curriculumId,
+      },
+    });
+    return {
+      data,
+    };
+  } catch (error) {
+    throw error;
+  }
+}
+
+export { CreateGrade, GetAllGrades, GetGradeByCurriculum };
