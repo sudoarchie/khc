@@ -12,14 +12,13 @@ import { AuthTeacher } from "../middlewares/teacherauthmiddleware";
 import { upload } from "../utils/uploadfile";
 import { z } from "zod";
 
-
 const AssignmentRouter = express.Router();
 
 AssignmentRouter.get("/", AuthStudent, async (req, res) => {
   try {
     const { take } = req.body;
     const data = req.cookies.studenttoken;
-    const token = data.token;
+    const token = data;
     const StudentId = ExtractId({ token });
     const fetchedData = await GetAssignment({ StudentId, take });
     res.status(200).json({
@@ -35,9 +34,8 @@ AssignmentRouter.get("/", AuthStudent, async (req, res) => {
 const AssignmentSchema = z.object({
   name: z.string(),
   description: z.string(),
-  subjectId: z.string()
-
-})
+  subjectId: z.string(),
+});
 AssignmentRouter.post(
   "/add",
   AuthAdmin,
@@ -52,13 +50,16 @@ AssignmentRouter.post(
         });
         return;
       }
-      const InputValidate = AssignmentSchema.safeParse({ name, description, subjectId })
+      const InputValidate = AssignmentSchema.safeParse({
+        name,
+        description,
+        subjectId,
+      });
       if (!InputValidate.success) {
         res.status(403).json({
-          msg: 'Invalid Inputs!!'
-        })
+          msg: "Invalid Inputs!!",
+        });
       } else {
-
         console.log(req.file);
         if (!req.file) {
           res.status(400).json({
@@ -78,7 +79,6 @@ AssignmentRouter.post(
         res.status(200).json({
           msg: "Assignment created successfully",
         });
-
       }
     } catch (err: any) {
       // Log the error for debugging
@@ -93,19 +93,16 @@ AssignmentRouter.post(
   }
 );
 
-const SubjectSchemea = z.string()
+const SubjectSchemea = z.string();
 AssignmentRouter.get("/special", AuthTeacher, async (req, res) => {
   try {
     const { subjectId } = req.body;
-    const validateSubject = SubjectSchemea.safeParse(subjectId)
+    const validateSubject = SubjectSchemea.safeParse(subjectId);
     if (!validateSubject.success) {
       res.status(403).json({
-        msg: "Invalid Input!!"
-      })
-
-    }
-    else {
-
+        msg: "Invalid Input!!",
+      });
+    } else {
       const data = await SpecialAssignment({ subjectId });
       res.status(200).json({
         data,
@@ -118,74 +115,80 @@ AssignmentRouter.get("/special", AuthTeacher, async (req, res) => {
   }
 });
 
-
 const AssignmentAddTeacher = z.object({
   name: z.string(),
   description: z.string(),
   subjectId: z.string(),
-  studentId: z.string()
-})
-AssignmentRouter.post("/addbyteacher", AuthTeacher, upload.single('file'), async (req, res) => {
-  try {
-    const { name, description, subjectId, studentId } = req.body;
+  studentId: z.string(),
+});
+AssignmentRouter.post(
+  "/addbyteacher",
+  AuthTeacher,
+  upload.single("file"),
+  async (req, res) => {
+    try {
+      const { name, description, subjectId, studentId } = req.body;
 
-    const validate = AssignmentAddTeacher.safeParse({ name, description, subjectId, studentId })
-
-
-    if (!validate.success) {
-      res.status(403).json({
-        msg: `Invalid Inputs!!`
-      })
-    } else {
-
-      if (!req.file) {
-        res.status(400).json({
-          msg: "No file uploaded",
-        });
-        return;
-      }
-      const file = req.file as Express.MulterS3.File;
-      const url = file.location;
-
-      const visible = false;
-      const data = await AddAssignment({
+      const validate = AssignmentAddTeacher.safeParse({
         name,
         description,
-        url,
         subjectId,
-        visible,
+        studentId,
       });
-      const assignmentId = data.id;
-      const newData = await AssignStudent({ studentId, assignmentId });
-      res.status(200).json({
-        msg: `Assignment assigned to Student`,
+
+      if (!validate.success) {
+        res.status(403).json({
+          msg: `Invalid Inputs!!`,
+        });
+      } else {
+        if (!req.file) {
+          res.status(400).json({
+            msg: "No file uploaded",
+          });
+          return;
+        }
+        const file = req.file as Express.MulterS3.File;
+        const url = file.location;
+
+        const visible = false;
+        const data = await AddAssignment({
+          name,
+          description,
+          url,
+          subjectId,
+          visible,
+        });
+        const assignmentId = data.id;
+        const newData = await AssignStudent({ studentId, assignmentId });
+        res.status(200).json({
+          msg: `Assignment assigned to Student`,
+        });
+      }
+    } catch (err) {
+      res.status(403).json({
+        msg: `Error while creating new assignment`,
       });
     }
-  } catch (err) {
-    res.status(403).json({
-      msg: `Error while creating new assignment`,
-    });
   }
-});
+);
 const AssignSchema = z.object({
   assignmentId: z.string(),
-  studentId: z.string()
-})
+  studentId: z.string(),
+});
 AssignmentRouter.post("/assign", AuthTeacher, async (req, res) => {
   try {
     const { assignmentId, studentId } = req.body;
 
-    const validateSchema = AssignSchema.safeParse({ assignmentId, studentId })
+    const validateSchema = AssignSchema.safeParse({ assignmentId, studentId });
     if (!validateSchema.success) {
       res.status(403).json({
-        msg: `Invalid schema `
-      })
+        msg: `Invalid schema `,
+      });
     } else {
-
       const data = await AssignStudent({ studentId, assignmentId });
       res.status(200).json({
         msg: `Assigned to Student`,
-      })
+      });
     }
   } catch (err) {
     res.status(403).json({
