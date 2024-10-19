@@ -1,7 +1,11 @@
 import express from "express";
 import { z } from "zod";
 import { AuthAdmin } from "../middlewares/adminauthmiddleware";
-import { CreateGrade, GetAllGrades } from "../services/gradeService";
+import {
+  CreateGrade,
+  GetAllGrades,
+  GetGradeByCurriculum,
+} from "../services/gradeService";
 const gradeRouter = express.Router();
 const addSchema = z.object({
   name: z.string(),
@@ -52,9 +56,26 @@ gradeRouter.get("/data", async (req, res) => {
   }
 });
 
-// gradeRouter.get("/dataCurriculumwise",async (req,res)=>{
-//     const {curriculumId} = req.body
-
-// })
+const dataCurriculumwiseSchema = z.string();
+gradeRouter.get("/datacurriculumwise", async (req, res) => {
+  const { curriculumId } = req.body;
+  try {
+    const validateSchema = dataCurriculumwiseSchema.safeParse(curriculumId);
+    if (!validateSchema.success) {
+      res.status(403).json({
+        msg: `Invalid Input`,
+      });
+    } else {
+      const data = await GetGradeByCurriculum({ curriculumId });
+      res.status(200).json({
+        data,
+      });
+    }
+  } catch (err) {
+    res.status(403).json({
+      msg: `Error while fetching data`,
+    });
+  }
+});
 
 export default gradeRouter;
