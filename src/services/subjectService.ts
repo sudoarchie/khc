@@ -1,15 +1,15 @@
 import { PrismaClient } from "@prisma/client";
 interface Sub {
   name: string;
-  curriculumId: string;
+  gradeId: string;
 }
 
 const prisma = new PrismaClient();
-async function GetSubject({ curriculumId }: { curriculumId: string }) {
+async function GetSubject({ gradeId }: { gradeId: string }) {
   try {
     const data = await prisma.subject.findMany({
       where: {
-        curriculumId,
+        gradeId,
       },
     });
     return data;
@@ -18,12 +18,12 @@ async function GetSubject({ curriculumId }: { curriculumId: string }) {
     else throw new Error(`Something went wrong!!`);
   }
 }
-async function CreateSubject({ name, curriculumId }: Sub) {
+async function CreateSubject({ name, gradeId }: Sub) {
   try {
     const create = await prisma.subject.create({
       data: {
         name: name,
-        curriculumId: curriculumId,
+        gradeId: gradeId,
       },
     });
     return create;
@@ -35,11 +35,11 @@ async function CreateSubject({ name, curriculumId }: Sub) {
 async function UpdateSubject({
   id,
   name,
-  curriculumId,
+  gradeId,
 }: {
   id: string;
   name: string;
-  curriculumId: string;
+  gradeId: string;
 }) {
   try {
     const update = await prisma.subject.update({
@@ -48,7 +48,7 @@ async function UpdateSubject({
       },
       data: {
         name: name,
-        curriculumId: curriculumId,
+        gradeId: gradeId,
       },
     });
     return update;
