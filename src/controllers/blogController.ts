@@ -3,7 +3,7 @@ import { AuthAdmin } from "../middlewares/adminauthmiddleware";
 import { z } from "zod";
 
 import { upload } from "../utils/uploadfile";
-import { CreateBlog } from "../services/blogService";
+import { CreateBlog, GetBlog } from "../services/blogService";
 const BlogRouter = express.Router();
 
 
@@ -42,6 +42,20 @@ BlogRouter.post('/add', AuthAdmin, upload.single("file"), async (req, res) => {
   } catch (err) {
     res.status(403).json({
       msg: `Unable to create blog!!`
+    })
+  }
+})
+
+BlogRouter.get('/', async (req, res) => {
+  const take = req.body
+  try {
+    const data = await GetBlog(take)
+    res.status(200).json({
+      data
+    })
+  } catch (error) {
+    res.status(403).json({
+      msg: `Unable to fetch blogs!!`
     })
   }
 })

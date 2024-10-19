@@ -17,5 +17,5 @@ mainRouter.use("/curriculum", curriculumRouter);
 mainRouter.use("/subject", subjectRouter);
 mainRouter.use("/assignment", AssignmentRouter);
 mainRouter.use("/grade", gradeRouter);
-mainRouter.use('/blog', BlogRoute, BlogRouterr)
+mainRouter.use('/blog', BlogRouter)
 export default mainRouter;
