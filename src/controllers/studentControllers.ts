@@ -18,6 +18,7 @@ const signupSchema = z.object({
   status: z.boolean(),
   videoAllow: z.boolean(),
   curriculumId: z.string(),
+  gradeId: z.string(),
 });
 studentRouter.post("/signup", async (req, res) => {
   const {
@@ -30,6 +31,7 @@ studentRouter.post("/signup", async (req, res) => {
     status,
     videoAllow,
     curriculumId,
+    gradeId,
   } = req.body;
   try {
     const validateSchema = signupSchema.safeParse({
@@ -42,6 +44,7 @@ studentRouter.post("/signup", async (req, res) => {
       status,
       videoAllow,
       curriculumId,
+      gradeId,
     });
     if (!validateSchema.success) {
       res.status(403).json({
@@ -58,6 +61,7 @@ studentRouter.post("/signup", async (req, res) => {
         status,
         videoAllow,
         curriculumId,
+        gradeId,
       });
       res.status(200).json({
         msg: "Account created Successfully",
@@ -72,19 +76,18 @@ studentRouter.post("/signup", async (req, res) => {
 
 const loginSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(8, 'Password length should be greater then 8')
-})
+  password: z.string().min(8, "Password length should be greater then 8"),
+});
 studentRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const validateSchema = loginSchema.safeParse({ email, password })
+    const validateSchema = loginSchema.safeParse({ email, password });
     if (!validateSchema.success) {
       res.status(403).json({
-        msg: `Invalid Input`
-      })
+        msg: `Invalid Input`,
+      });
     } else {
-
       const result = await StudentLogin({ email, password });
       res.cookie("studenttoken", result.token);
       res.status(200).json({
