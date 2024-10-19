@@ -10,9 +10,9 @@ import { z } from "zod";
 const subjectRouter = express.Router();
 
 subjectRouter.get("/data", async (req, res) => {
-  const { curriculumId } = req.body;
+  const { gradeId } = req.body;
   try {
-    const data = await GetSubject({ curriculumId });
+    const data = await GetSubject({ gradeId });
     res.status(200).json({
       data: data,
     });
@@ -24,19 +24,18 @@ subjectRouter.get("/data", async (req, res) => {
 });
 const addSchema = z.object({
   name: z.string(),
-  curriculumId: z.string()
-})
+  gradeId: z.string(),
+});
 subjectRouter.post("/add", AuthAdmin, async (req, res) => {
   try {
-    const { name, curriculumId } = req.body;
-    const validateSchema = addSchema.safeParse({ name, curriculumId })
+    const { name, gradeId } = req.body;
+    const validateSchema = addSchema.safeParse({ name, gradeId });
     if (!validateSchema.success) {
       res.status(403).json({
-        msg: `Invalid Input`
-      })
+        msg: `Invalid Input`,
+      });
     } else {
-
-      const data = await CreateSubject({ name, curriculumId });
+      const data = await CreateSubject({ name, gradeId });
       res.status(200).json({
         msg: "Subject Created Successfully",
       });
@@ -51,19 +50,19 @@ subjectRouter.post("/add", AuthAdmin, async (req, res) => {
 const updateSchema = z.object({
   id: z.string(),
   name: z.string(),
-  curriculumId: z.string()
-})
+  gradeId: z.string(),
+});
 subjectRouter.post("/update", AuthAdmin, async (req, res) => {
   try {
-    const { id, name, curriculumId } = req.body;
+    const { id, name, gradeId } = req.body;
 
-    const validateSchema = updateSchema.safeParse({ id, name, curriculumId })
+    const validateSchema = updateSchema.safeParse({ id, name, gradeId });
     if (!validateSchema.success) {
       res.status(403).json({
-        msg: `Invalid Input`
-      })
+        msg: `Invalid Input`,
+      });
     } else {
-      const data = await UpdateSubject({ id, name, curriculumId });
+      const data = await UpdateSubject({ id, name, gradeId });
       res.status(200).json({
         msg: "Subject Updated Successfully",
       });
@@ -75,18 +74,17 @@ subjectRouter.post("/update", AuthAdmin, async (req, res) => {
   }
 });
 const deleteSchema = z.object({
-  id: z.string()
-})
+  id: z.string(),
+});
 subjectRouter.delete("/delete", AuthAdmin, async (req, res) => {
   try {
     const { id } = req.body;
-    const validateSchema = deleteSchema.safeParse({ id })
+    const validateSchema = deleteSchema.safeParse({ id });
     if (!validateSchema.success) {
       res.status(403).json({
-        msg: `Invalid Input id`
-      })
+        msg: `Invalid Input id`,
+      });
     } else {
-
       const data = await DeleteSubject({ id });
       res.status(200).json({
         msg: `Subject Deleted Successfully`,
