@@ -8,9 +8,11 @@ model Student {
   payment           Boolean
   status            Boolean
   videoAllow        Boolean
-  curriculum        Curriculum          @relation(fields: [curriculumId], references: [id])
-  curriculumId      String              @db.ObjectId
+  grade             Grade               @relation(fields: [gradeId], references: [id])
+  gradeId           String              @db.ObjectId
   Enrollment        Enrollment[]
   StudentAssignment StudentAssignment[]
   createdAt         DateTime            @default(now())
+  Curriculum        Curriculum?         @relation(fields: [curriculumId], references: [id])
+  curriculumId      String?             @db.ObjectId
 }
