@@ -6,6 +6,7 @@ import curriculumRouter from "./controllers/curriculumControllers";
 import subjectRouter from "./controllers/subjectControllers";
 import AssignmentRouter from "./controllers/assignmentControllers";
 import gradeRouter from "./controllers/gradeControllers";
+import BlogRouter from "./controllers/blogController";
 
 const mainRouter = express.Router();
 
@@ -16,4 +17,5 @@ mainRouter.use("/curriculum", curriculumRouter);
 mainRouter.use("/subject", subjectRouter);
 mainRouter.use("/assignment", AssignmentRouter);
 mainRouter.use("/grade", gradeRouter);
+mainRouter.use('/blog', BlogRoute, BlogRouterr)
 export default mainRouter;
