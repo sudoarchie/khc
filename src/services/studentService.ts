@@ -16,6 +16,7 @@ interface Student {
   status: boolean;
   videoAllow: boolean;
   curriculumId: string;
+  gradeId: string;
 }
 
 async function StudentSignUp({
@@ -28,6 +29,7 @@ async function StudentSignUp({
   status,
   videoAllow,
   curriculumId,
+  gradeId,
 }: Student) {
   // console.log(process.env); // Debugging line to see if environment variables are loaded
 
@@ -44,6 +46,7 @@ async function StudentSignUp({
         status: status,
         videoAllow: videoAllow,
         curriculumId: curriculumId,
+        gradeId: gradeId,
       },
     });
 
