@@ -1,11 +1,14 @@
-
 import { Request, Response, NextFunction } from "express";
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
 // Secret key (should be in an environment variable)
-const JWT_SECRET = process.env.JWT_SECRET || 'MYsuperSECRETpassword';
+const JWT_SECRET = process.env.JWT_SECRET || "MYsuperSECRETpassword";
 
-export function AuthStudent(req: Request, res: Response, next: NextFunction): any {
+export function AuthStudent(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): any {
   const token = req.cookies.studenttoken;
 
   if (!token) {
@@ -16,7 +19,8 @@ export function AuthStudent(req: Request, res: Response, next: NextFunction): an
 
   try {
     // Verify the token with the secret key
-    const verified = jwt.verify(token.token, JWT_SECRET);
+
+    const verified = jwt.verify(token, JWT_SECRET);
 
     if (!verified) {
       return res.status(401).json({
