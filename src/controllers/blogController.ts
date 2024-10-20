@@ -3,7 +3,7 @@ import { AuthAdmin } from "../middlewares/adminauthmiddleware";
 import { z } from "zod";
 
 import { upload } from "../utils/uploadfile";
-import { CreateBlog, GetBlog } from "../services/blogService";
+import { CreateBlog, DeleteBlog, GetBlog } from "../services/blogService";
 const BlogRouter = express.Router();
 
 
@@ -60,4 +60,17 @@ BlogRouter.get('/', async (req, res) => {
   }
 })
 
+BlogRouter.delete('/', AuthAdmin, async (req, res) => {
+  const { id } = req.body
+  try {
+    const del = await DeleteBlog({ id })
+    res.status(200).json({
+      msg: `Blog Deleted Successfully`
+    })
+  } catch (error) {
+    res.status(403).json({
+      msg: `Unable to delete blog`
+    })
+  }
+})
 export default BlogRouter

@@ -38,4 +38,19 @@ async function GetBlog({ take }: { take: number }) {
   }
 }
 
-export { CreateBlog, GetBlog }
+async function DeleteBlog({ id }: { id: string }) {
+  try {
+    const del = await prisma.blog.delete({
+      where: {
+        id
+      }
+    })
+    return {
+      del
+    }
+  } catch (error) {
+    throw error
+  }
+}
+
+export { CreateBlog, GetBlog, DeleteBlog }
