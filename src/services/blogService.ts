@@ -53,4 +53,22 @@ async function DeleteBlog({ id }: { id: string }) {
   }
 }
 
-export { CreateBlog, GetBlog, DeleteBlog }
+async function UpdateBlog({ id, title, description, url }: { id: string, title: string, description: string, url: string }) {
+  try {
+    const update = await prisma.blog.update({
+      where: {
+        id
+      },
+      data: {
+        title,
+        description,
+        url
+      }
+    })
+    return update
+  } catch (err) {
+    throw err
+  }
+}
+
+export { CreateBlog, GetBlog, DeleteBlog, UpdateBlog }
