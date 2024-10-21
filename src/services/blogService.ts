@@ -38,6 +38,19 @@ async function GetBlog({ take }: { take: number }) {
   }
 }
 
+async function GetBlogById({ id }: { id: string }) {
+  try {
+    const data = await prisma.blog.findUnique({
+      where: {
+        id
+      }
+    })
+    return data
+  } catch (err) {
+    throw err
+  }
+}
+
 async function DeleteBlog({ id }: { id: string }) {
   try {
     const del = await prisma.blog.delete({
@@ -71,4 +84,4 @@ async function UpdateBlog({ id, title, description, url }: { id: string, title: 
   }
 }
 
-export { CreateBlog, GetBlog, DeleteBlog, UpdateBlog }
+export { CreateBlog, GetBlog, DeleteBlog, UpdateBlog, GetBlogById }

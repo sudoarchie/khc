@@ -3,7 +3,7 @@ import { AuthAdmin } from "../middlewares/adminauthmiddleware";
 import { z } from "zod";
 
 import { upload } from "../utils/uploadfile";
-import { CreateBlog, DeleteBlog, GetBlog, UpdateBlog } from "../services/blogService";
+import { CreateBlog, DeleteBlog, GetBlog, GetBlogById, UpdateBlog } from "../services/blogService";
 import { title } from "process";
 const BlogRouter = express.Router();
 
@@ -61,6 +61,19 @@ BlogRouter.get('/', async (req, res) => {
   }
 })
 
+BlogRouter.get('/serve', async (req, res) => {
+  const { id } = req.body
+  try {
+    const data = await GetBlogById({ id })
+    res.status(200).json({
+      data
+    })
+  } catch (err) {
+    res.status(403).json({
+      msg: `Unable to get Blog!!`
+    })
+  }
+})
 BlogRouter.delete('/', AuthAdmin, async (req, res) => {
   const { id } = req.body
   try {
