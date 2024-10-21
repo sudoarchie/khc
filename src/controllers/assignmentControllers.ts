@@ -128,6 +128,7 @@ AssignmentRouter.post(
   async (req, res) => {
     try {
       const { name, description, subjectId, studentId } = req.body;
+      const token = req.cookies.teachertoken.token;
 
       const validate = AssignmentAddTeacher.safeParse({
         name,
@@ -159,7 +160,12 @@ AssignmentRouter.post(
           visible,
         });
         const assignmentId = data.id;
-        const newData = await AssignStudent({ studentId, assignmentId });
+        const teacherId = ExtractId({ token });
+        const newData = await AssignStudent({
+          studentId,
+          assignmentId,
+          teacherId,
+        });
         res.status(200).json({
           msg: `Assignment assigned to Student`,
         });
@@ -179,13 +185,16 @@ AssignmentRouter.post("/assign", AuthTeacher, async (req, res) => {
   try {
     const { assignmentId, studentId } = req.body;
 
+    const token = req.cookies.teachertoken.token;
+
     const validateSchema = AssignSchema.safeParse({ assignmentId, studentId });
     if (!validateSchema.success) {
       res.status(403).json({
         msg: `Invalid schema `,
       });
     } else {
-      const data = await AssignStudent({ studentId, assignmentId });
+      const teacherId = ExtractId({ token });
+      const data = await AssignStudent({ studentId, assignmentId, teacherId });
       res.status(200).json({
         msg: `Assigned to Student`,
       });
