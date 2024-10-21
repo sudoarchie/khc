@@ -38,4 +38,20 @@ async function GetSubmittedAssignment({ teacherId }: { teacherId: string }) {
   }
 }
 
-export { SubmitAssignment, GetSubmittedAssignment };
+async function MarksForAssignment({ assignmentSubmitId, marks }: { assignmentSubmitId: string, marks: number }) {
+  try {
+    const data = await prisma.assignmentSubmitGrade.create({
+      data: {
+        assignmentSubmitId: assignmentSubmitId,
+        marks
+      }
+    })
+    return data
+  } catch (err) {
+    console.log(err)
+    throw err
+  }
+
+}
+
+export { SubmitAssignment, GetSubmittedAssignment, MarksForAssignment };
