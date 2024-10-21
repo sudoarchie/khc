@@ -1,7 +1,15 @@
 model StudentAssignment {
-  id           String     @id @default(auto()) @map("_id") @db.ObjectId
-  student      Student    @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  studentId    String     @db.ObjectId
-  assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
-  assignmentId String     @db.ObjectId
+  id               String            @id @default(auto()) @map("_id") @db.ObjectId
+  student          Student           @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId        String            @db.ObjectId
+  assignment       Assignment        @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  assignmentId     String            @db.ObjectId
+  assignmentSubmit AssignmentSubmit?
+}
+
+model AssignmentSubmit {
+  id                  String            @id @default(auto()) @map("_id") @db.ObjectId
+  studentassignment   StudentAssignment @relation(fields: [studentAssignmentId], references: [id])
+  studentAssignmentId String            @unique @db.ObjectId
+  SubmitUrl           String
 }
