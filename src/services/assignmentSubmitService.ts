@@ -54,4 +54,21 @@ async function MarksForAssignment({ assignmentSubmitId, marks }: { assignmentSub
 
 }
 
-export { SubmitAssignment, GetSubmittedAssignment, MarksForAssignment };
+async function GetMarks({ studentId }: { studentId: string }) {
+  try {
+    const data = await prisma.assignmentSubmitGrade.findMany({
+      where: {
+        assignmentSubmit: {
+          studentassignment: {
+            studentId: studentId
+          }
+        }
+      }
+    })
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export { SubmitAssignment, GetSubmittedAssignment, MarksForAssignment, GetMarks };

@@ -2,6 +2,7 @@ import express from "express";
 import { AuthStudent } from "../middlewares/studentauthmiddleware";
 import { upload } from "../utils/uploadfile";
 import {
+  GetMarks,
   GetSubmittedAssignment,
   MarksForAssignment,
   SubmitAssignment,
@@ -79,6 +80,22 @@ AssignmentSubmitRouter.post("/grade", AuthTeacher, async (req, res) => {
     console.log(err)
     res.status(403).json({
       msg: `Unable assign marks`
+    })
+  }
+})
+
+AssignmentSubmitRouter.get("/getmarks", async (req, res) => {
+  const token = req.cookies.studenttoken;
+  const studentId = ExtractId({ token });
+
+  try {
+    const data = await GetMarks({ studentId })
+    res.status(200).json({
+      data
+    })
+  } catch (err) {
+    res.status(403).json({
+      msg: `Unable to fetch data`
     })
   }
 })
