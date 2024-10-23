@@ -15,4 +15,5 @@ model Student {
   createdAt         DateTime            @default(now())
   Curriculum        Curriculum?         @relation(fields: [curriculumId], references: [id])
   curriculumId      String?             @db.ObjectId
+  studentteacher    StudentTeacher[]
 }

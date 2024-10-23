@@ -1,0 +1,10 @@
+model StudentTeacher {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId String  @db.ObjectId
+  teacher   Teacher @relation(fields: [teacherId], references: [id])
+  teacherId String  @db.ObjectId
+  timing    String
+
+  @@unique([studentId, teacherId, timing])
+}
