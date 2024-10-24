@@ -120,6 +120,7 @@ const AssignmentAddTeacher = z.object({
   description: z.string(),
   subjectId: z.string(),
   studentId: z.string(),
+  deadline: z.string().date()
 });
 AssignmentRouter.post(
   "/addbyteacher",
@@ -127,7 +128,7 @@ AssignmentRouter.post(
   upload.single("file"),
   async (req, res) => {
     try {
-      const { name, description, subjectId, studentId } = req.body;
+      const { name, description, subjectId, studentId, deadline } = req.body;
       const token = req.cookies.teachertoken.token;
 
       const validate = AssignmentAddTeacher.safeParse({
@@ -135,6 +136,7 @@ AssignmentRouter.post(
         description,
         subjectId,
         studentId,
+        deadline
       });
 
       if (!validate.success) {
@@ -165,6 +167,7 @@ AssignmentRouter.post(
           studentId,
           assignmentId,
           teacherId,
+          deadline
         });
         res.status(200).json({
           msg: `Assignment assigned to Student`,
@@ -180,21 +183,22 @@ AssignmentRouter.post(
 const AssignSchema = z.object({
   assignmentId: z.string(),
   studentId: z.string(),
+  deadline: z.string().date()
 });
 AssignmentRouter.post("/assign", AuthTeacher, async (req, res) => {
   try {
-    const { assignmentId, studentId } = req.body;
+    const { assignmentId, studentId, deadline } = req.body;
 
     const token = req.cookies.teachertoken.token;
 
-    const validateSchema = AssignSchema.safeParse({ assignmentId, studentId });
+    const validateSchema = AssignSchema.safeParse({ assignmentId, studentId, deadline });
     if (!validateSchema.success) {
       res.status(403).json({
-        msg: `Invalid schema `,
+        msg: `Invalid Input`,
       });
     } else {
       const teacherId = ExtractId({ token });
-      const data = await AssignStudent({ studentId, assignmentId, teacherId });
+      const data = await AssignStudent({ studentId, assignmentId, teacherId, deadline });
       res.status(200).json({
         msg: `Assigned to Student`,
       });
