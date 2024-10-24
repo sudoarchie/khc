@@ -12,11 +12,8 @@ interface Student {
   name: string;
   mobileNo: number;
   country: string;
-  payment: boolean;
-  status: boolean;
-  videoAllow: boolean;
-  curriculumId: string;
   gradeId: string;
+  curriculumId: string;
 }
 
 async function StudentSignUp({
@@ -25,9 +22,6 @@ async function StudentSignUp({
   name,
   mobileNo,
   country,
-  payment,
-  status,
-  videoAllow,
   curriculumId,
   gradeId,
 }: Student) {
@@ -42,9 +36,6 @@ async function StudentSignUp({
         name: name,
         mobileNo: mobileNo,
         country: country,
-        payment: payment,
-        status: status,
-        videoAllow: videoAllow,
         curriculumId: curriculumId,
         gradeId: gradeId,
       },
