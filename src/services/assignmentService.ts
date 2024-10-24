@@ -27,6 +27,7 @@ async function GetAssignment({ StudentId, take }: GetAssignment) {
 
     return data;
   } catch (err) {
+    console.log(err)
     if (err) throw err;
     else throw new Error(`Unable to fetch data!!`);
   }
@@ -60,10 +61,12 @@ async function AssignStudent({
   studentId,
   assignmentId,
   teacherId,
+  deadline
 }: {
   studentId: string;
   assignmentId: string;
   teacherId: string;
+  deadline: string
 }) {
   try {
     const data = await prisma.studentAssignment.create({
@@ -71,6 +74,7 @@ async function AssignStudent({
         studentId,
         assignmentId,
         teacherId,
+        deadline,
       },
     });
     return data;
