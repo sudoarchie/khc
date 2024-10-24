@@ -14,25 +14,12 @@ const signupSchema = z.object({
   name: z.string(),
   password: z.string().min(8, "Password cannot be less then 8 letters"),
   country: z.string(),
-  payment: z.boolean(),
-  status: z.boolean(),
-  videoAllow: z.boolean(),
   curriculumId: z.string(),
   gradeId: z.string(),
 });
 studentRouter.post("/signup", async (req, res) => {
-  const {
-    email,
-    mobileNo,
-    name,
-    password,
-    country,
-    payment,
-    status,
-    videoAllow,
-    curriculumId,
-    gradeId,
-  } = req.body;
+  const { email, mobileNo, name, password, country, curriculumId, gradeId } =
+    req.body;
   try {
     const validateSchema = signupSchema.safeParse({
       email,
@@ -40,9 +27,6 @@ studentRouter.post("/signup", async (req, res) => {
       name,
       password,
       country,
-      payment,
-      status,
-      videoAllow,
       curriculumId,
       gradeId,
     });
@@ -57,9 +41,6 @@ studentRouter.post("/signup", async (req, res) => {
         name,
         password,
         country,
-        payment,
-        status,
-        videoAllow,
         curriculumId,
         gradeId,
       });
