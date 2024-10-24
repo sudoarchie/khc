@@ -1,11 +1,19 @@
 model Teacher {
   id                String              @id @default(auto()) @map("_id") @db.ObjectId
   name              String
-  firstName         String
-  secoundName       String
-  thirdName         String
   email             String              @unique
+  mobileNo          String
   password          String
   StudentAssignment StudentAssignment[]
-  studentTeacher    StudentTeacher[]
+
+  teacherSubjects TeacherSubject[]
+  Enrollment      Enrollment[]
+}
+
+model TeacherSubject {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  teacherId String  @db.ObjectId
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  subjectId String  @db.ObjectId
 }
