@@ -8,13 +8,11 @@ import bcrypt from "bcrypt";
 const prisma = new PrismaClient();
 interface teacher {
   name: string,
-  firstName: string,
-  secoundName: string,
-  thirdName: string,
   email: string,
+  mobileNo: string
   password: string
 }
-async function TeacherSignUp({ name, firstName, secoundName, thirdName, email, password }: teacher) {
+async function TeacherSignUp({ name, email, mobileNo, password }: teacher) {
   console.log(process.env); // Debugging line to see if environment variables are loaded
 
   try {
@@ -22,10 +20,8 @@ async function TeacherSignUp({ name, firstName, secoundName, thirdName, email, p
     const createdData = await prisma.teacher.create({
       data: {
         name: name,
-        firstName: firstName,
-        secoundName: secoundName,
-        thirdName: thirdName,
         email: email,
+        mobileNo,
         password: hashedPassword,
       },
     });
