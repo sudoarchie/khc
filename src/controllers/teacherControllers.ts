@@ -5,23 +5,21 @@ const teacherRouter = express.Router();
 
 const signupSchema = z.object({
   name: z.string(),
-  firstName: z.string(),
-  secoundName: z.string(),
-  thirdName: z.string(),
   email: z.string().email(),
+  mobileNo: z.string(),
   password: z.string().min(8, `Password length must greater then 8`)
 })
 teacherRouter.post("/signup", async (req, res) => {
-  const { name, firstName, secoundName, thirdName, email, password } = req.body
+  const { name, mobileNo, email, password } = req.body
   try {
-    const validateSchema = signupSchema.safeParse({ name, firstName, secoundName, thirdName, email, password })
+    const validateSchema = signupSchema.safeParse({ name, mobileNo, email, password })
     if (!validateSchema.success) {
       res.status(403).json({
         msg: `Invalid Inputs`
       })
     } else {
 
-      const response = await TeacherSignUp({ name, firstName, secoundName, thirdName, email, password });
+      const response = await TeacherSignUp({ name, email, mobileNo, password });
       res.status(200).json({
         msg: response.msg
       })
