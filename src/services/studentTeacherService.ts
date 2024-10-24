@@ -10,16 +10,17 @@ interface assign {
 }
 async function AssignTeacher({ teacherId, studentId, timing }: assign) {
   try {
-    const data = await prisma.studentTeacher.create({
-      data: {
-        teacherId,
-        studentId,
-        timing
-      }
-    })
-    return {
-      data
-    }
+    // const data = await prisma.studentTeacher.create({
+    //   data: {
+    //     teacherId,
+    //     studentId,
+    //     timing
+    //   }
+    // })
+    // return {
+    //   data
+    // }
+
   } catch (err) {
     throw err
   }
