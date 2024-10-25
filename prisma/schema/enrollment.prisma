@@ -6,13 +6,12 @@ model Enrollment {
   teacherId      String   @db.ObjectId
   subject        Subject  @relation(fields: [subjectId], references: [id])
   subjectId      String   @db.ObjectId
-  TransactionId  String
-  videoAllow     String
-  Timing         DateTime
+  transactionId  String
+  videoAllow     Boolean
+  timing         String
   durationInHr   Int
   enrollmentDate DateTime @default(now())
-  expireDate     DateTime
-  createdAt      DateTime @default(now())
+  expireDate     String
   updatedAt      DateTime @updatedAt
 
   @@unique([studentId, subjectId])
