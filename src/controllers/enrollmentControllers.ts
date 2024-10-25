@@ -1,6 +1,7 @@
 import express from 'express'
 import { z } from 'zod'
-import { Enroll } from '../services/enrollmentService'
+import { Enroll, GetCourse } from '../services/enrollmentService'
+import ExtractId from '../utils/extractIdfromToken'
 const enrollmentRouter = express.Router()
 const enroll = z.object({
   studentId: z.string(),
@@ -33,6 +34,22 @@ enrollmentRouter.post('/', async (req, res) => {
   } catch (err) {
     res.status(403).json({
       msg: `Unable to enroll student!!`
+    })
+  }
+})
+
+enrollmentRouter.get('/', async (req, res) => {
+  const token = req.cookies.studenttoken
+  try {
+    const studentId = ExtractId({ token })
+    console.log(studentId)
+    const course = await GetCourse({ studentId })
+    res.status(200).json({
+      course
+    })
+  } catch (err) {
+    res.status(403).json({
+      msg: `Unable to Fetch courses!`
     })
   }
 })
