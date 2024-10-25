@@ -1,6 +1,6 @@
 import express from 'express'
 import { z } from 'zod'
-import { CreateCourse } from '../services/courseService'
+import { CreateCourse, GetAllCourse } from '../services/courseService'
 import { AuthAdmin } from '../middlewares/adminauthmiddleware'
 import { upload } from '../utils/uploadfile'
 const courseRouter = express.Router()
@@ -42,6 +42,20 @@ courseRouter.post('/add', AuthAdmin, upload.single("file"), async (req, res) => 
     console.log(error)
     res.status(403).json({
       msg: `Unable to Create course`
+    })
+  }
+})
+
+courseRouter.get('/', async (req, res) => {
+  try {
+    const data = await GetAllCourse()
+    res.status(200).json({
+      data
+    })
+  } catch (err) {
+    console.log(err)
+    res.status(403).json({
+      msg: `Unable to fetch Course!!`
     })
   }
 })

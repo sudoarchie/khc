@@ -25,4 +25,13 @@ async function CreateCourse({ name, description, subjectId, thumbnail, price }: 
   }
 }
 
-export { CreateCourse }
+async function GetAllCourse() {
+  try {
+    const data = await prisma.course.findMany({})
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export { CreateCourse, GetAllCourse }
