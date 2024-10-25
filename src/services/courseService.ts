@@ -34,4 +34,17 @@ async function GetAllCourse() {
   }
 }
 
-export { CreateCourse, GetAllCourse }
+async function DeleteCourse({ id }: { id: string }) {
+  try {
+    const data = await prisma.course.delete({
+      where: {
+        id: id
+      }
+    })
+    return data
+  } catch (err) {
+    throw err
+  }
+}
+
+export { CreateCourse, GetAllCourse, DeleteCourse }

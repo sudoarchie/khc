@@ -1,8 +1,9 @@
 import express from 'express'
 import { z } from 'zod'
-import { CreateCourse, GetAllCourse } from '../services/courseService'
+import { CreateCourse, DeleteCourse, GetAllCourse } from '../services/courseService'
 import { AuthAdmin } from '../middlewares/adminauthmiddleware'
 import { upload } from '../utils/uploadfile'
+import { AuthStudent } from '../middlewares/studentauthmiddleware'
 const courseRouter = express.Router()
 
 const addScheam = z.object({
@@ -59,5 +60,21 @@ courseRouter.get('/', async (req, res) => {
     })
   }
 })
+
+courseRouter.delete('/', async (req, res) => {
+  const { id } = req.body
+  try {
+    const data = await DeleteCourse({ id })
+    res.status(200).json({
+      msg: `Course deleted!!`
+    })
+  } catch (error) {
+    res.status(403).json({
+      msg: `Unable to delete course!!`
+    })
+  }
+})
+
+
 
 export default courseRouter
