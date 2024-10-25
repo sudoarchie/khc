@@ -59,4 +59,14 @@ async function StudentList({ teacherId }: { teacherId: string }) {
   }
 }
 
-export { Enroll, GetCourse, StudentList }
+async function StudentListAll({ take, skip }: { take: number, skip: number }) {
+  try {
+    const data = await prisma.enrollment.findMany({})
+    return data
+  } catch (err) {
+    console.log(err)
+    throw err
+  }
+}
+
+export { Enroll, GetCourse, StudentList, StudentListAll }

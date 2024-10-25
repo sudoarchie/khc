@@ -1,8 +1,9 @@
 import express from 'express'
 import { z } from 'zod'
-import { Enroll, GetCourse, StudentList } from '../services/enrollmentService'
+import { Enroll, GetCourse, StudentList, StudentListAll } from '../services/enrollmentService'
 import ExtractId from '../utils/extractIdfromToken'
 import { AuthTeacher } from '../middlewares/teacherauthmiddleware'
+import { AuthAdmin } from '../middlewares/adminauthmiddleware'
 const enrollmentRouter = express.Router()
 const enroll = z.object({
   studentId: z.string(),
@@ -70,4 +71,30 @@ enrollmentRouter.get('/studentlist', AuthTeacher, async (req, res) => {
     })
   }
 })
+const studentlistAll = z.number()
+enrollmentRouter.get("/studentlistall", AuthAdmin, async (req, res) => {
+  const { take } = req.body
+  try {
+    const validateSchema = studentlistAll.safeParse(take)
+    if (!validateSchema.success) {
+      res.status(403).json({
+        msg: `Invalid Input!!`
+      })
+    } else {
+      let skip = take - 15
+      if (skip < 0) {
+        skip = 0;
+      }
+      const data = await StudentListAll({ take, skip })
+      res.status(403).json({
+        data
+      })
+    }
+  } catch (err) {
+    res.status(403).json({
+      msg: `Unable to fetch the list!!`
+    })
+  }
+})
+
 export default enrollmentRouter
