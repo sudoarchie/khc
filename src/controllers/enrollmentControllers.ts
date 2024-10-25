@@ -1,7 +1,8 @@
 import express from 'express'
 import { z } from 'zod'
-import { Enroll, GetCourse } from '../services/enrollmentService'
+import { Enroll, GetCourse, StudentList } from '../services/enrollmentService'
 import ExtractId from '../utils/extractIdfromToken'
+import { AuthTeacher } from '../middlewares/teacherauthmiddleware'
 const enrollmentRouter = express.Router()
 const enroll = z.object({
   studentId: z.string(),
@@ -54,4 +55,19 @@ enrollmentRouter.get('/', async (req, res) => {
   }
 })
 
+enrollmentRouter.get('/studentlist', AuthTeacher, async (req, res) => {
+  const token = req.cookies.teachertoken.token;
+  console.log(token)
+  const teacherId = ExtractId({ token })
+  try {
+    const data = await StudentList({ teacherId })
+    res.status(200).json({
+      data
+    })
+  } catch (err) {
+    res.status(403).json({
+      msg: `Unable to fetch student list!!`
+    })
+  }
+})
 export default enrollmentRouter

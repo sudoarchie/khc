@@ -46,4 +46,17 @@ async function GetCourse({ studentId }: { studentId: string }) {
   }
 }
 
-export { Enroll, GetCourse }
+async function StudentList({ teacherId }: { teacherId: string }) {
+  try {
+    const list = await prisma.enrollment.findMany({
+      where: {
+        teacherId
+      }
+    })
+    return list
+  } catch (err) {
+    throw err
+  }
+}
+
+export { Enroll, GetCourse, StudentList }
