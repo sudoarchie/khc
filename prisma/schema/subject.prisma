@@ -6,6 +6,7 @@ model Subject {
   assignment      Assignment[]
   enrollment      Enrollment[]
   teacherSubjects TeacherSubject[]
+  course          Course[]
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
 }

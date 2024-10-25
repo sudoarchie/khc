@@ -8,6 +8,7 @@ model Student {
   grade             Grade               @relation(fields: [gradeId], references: [id])
   gradeId           String              @db.ObjectId
   Enrollment        Enrollment[]
+  CourseEnroll      CourseEnroll[]
   StudentAssignment StudentAssignment[]
   createdAt         DateTime            @default(now())
   Curriculum        Curriculum?         @relation(fields: [curriculumId], references: [id])

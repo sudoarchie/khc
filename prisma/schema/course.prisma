@@ -1,0 +1,24 @@
+model Course {
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  description  String
+  subject      Subject        @relation(fields: [subjectId], references: [id])
+  subjectId    String         @db.ObjectId
+  price        Int
+  thumbnail    String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  CourseEnroll CourseEnroll[]
+}
+
+model CourseEnroll {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  student       Student  @relation(fields: [studentId], references: [id])
+  studentId     String   @db.ObjectId
+  course        Course   @relation(fields: [courseId], references: [id])
+  courseId      String   @db.ObjectId
+  transactionId String
+  expireDate    String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
