@@ -110,4 +110,17 @@ async function UploadVideo({ courseId, name, description, url }: VideoSchema) {
   }
 }
 
-export { CreateCourse, GetCourseById, GetAllCourse, DeleteCourse, UpdateCourse, UploadVideo }
+async function GetVideos({ courseId }: { courseId: string }) {
+  try {
+    const data = await prisma.courseVideo.findMany({
+      where: {
+        courseId
+      }
+    })
+    return data
+  } catch (err) {
+    throw err
+  }
+}
+
+export { CreateCourse, GetCourseById, GetAllCourse, DeleteCourse, UpdateCourse, UploadVideo, GetVideos }

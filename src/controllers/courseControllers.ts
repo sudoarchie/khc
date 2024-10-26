@@ -1,6 +1,6 @@
 import express from 'express'
 import { z } from 'zod'
-import { CreateCourse, DeleteCourse, GetAllCourse, GetCourseById, UpdateCourse, UploadVideo } from '../services/courseService'
+import { CreateCourse, DeleteCourse, GetAllCourse, GetCourseById, GetVideos, UpdateCourse, UploadVideo } from '../services/courseService'
 import { AuthAdmin } from '../middlewares/adminauthmiddleware'
 import { upload } from '../utils/uploadfile'
 import { AuthStudent } from '../middlewares/studentauthmiddleware'
@@ -152,6 +152,20 @@ courseRouter.post('/upload', AuthAdmin, upload.single("file"), async (req, res) 
     console.log(error)
     res.status(403).json({
       msg: `Upload Failed!!`
+    })
+  }
+})
+courseRouter.get('/video', async (req, res) => {
+  const { courseId } = req.body
+  try {
+    const data = await GetVideos({ courseId })
+    res.status(200).json({
+      data
+    })
+  } catch (err) {
+    console.log(err)
+    res.status(403).json({
+      msg: `Unable to Fetch Videos`
     })
   }
 })
