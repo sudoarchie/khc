@@ -87,5 +87,27 @@ async function UpdateCourse({ id, name, description, subjectId, thumbnail, price
     throw err
   }
 }
+interface VideoSchema {
+  courseId: string,
+  name: string,
+  description: string,
+  url: string
+}
 
-export { CreateCourse, GetCourseById, GetAllCourse, DeleteCourse, UpdateCourse }
+async function UploadVideo({ courseId, name, description, url }: VideoSchema) {
+  try {
+    const data = prisma.courseVideo.create({
+      data: {
+        courseId,
+        name,
+        description,
+        url
+      }
+    })
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export { CreateCourse, GetCourseById, GetAllCourse, DeleteCourse, UpdateCourse, UploadVideo }

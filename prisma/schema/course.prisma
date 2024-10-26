@@ -1,13 +1,15 @@
 model Course {
-  id           String         @id @default(auto()) @map("_id") @db.ObjectId
-  name         String
-  description  String
-  subject      Subject        @relation(fields: [subjectId], references: [id])
-  subjectId    String         @db.ObjectId
-  price        Int
-  thumbnail    String
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  subject     Subject       @relation(fields: [subjectId], references: [id])
+  subjectId   String        @db.ObjectId
+  price       Int
+  thumbnail   String
+  CourseVideo CourseVideo[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
   CourseEnroll CourseEnroll[]
 }
 
@@ -21,4 +23,13 @@ model CourseEnroll {
   expireDate    String
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+}
+
+model CourseVideo {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  course      Course @relation(fields: [courseId], references: [id])
+  courseId    String @db.ObjectId
+  name        String
+  description String
+  url         String
 }

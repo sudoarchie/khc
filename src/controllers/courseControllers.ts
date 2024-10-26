@@ -1,6 +1,6 @@
 import express from 'express'
 import { z } from 'zod'
-import { CreateCourse, DeleteCourse, GetAllCourse, GetCourseById, UpdateCourse } from '../services/courseService'
+import { CreateCourse, DeleteCourse, GetAllCourse, GetCourseById, UpdateCourse, UploadVideo } from '../services/courseService'
 import { AuthAdmin } from '../middlewares/adminauthmiddleware'
 import { upload } from '../utils/uploadfile'
 import { AuthStudent } from '../middlewares/studentauthmiddleware'
@@ -127,6 +127,33 @@ courseRouter.put('/', AuthAdmin, upload.single("file"), async (req, res) => {
 
   }
 })
-
+const uploadScheama = z.object({
+  courseId: z.string(),
+  name: z.string(),
+  description: z.string()
+})
+courseRouter.post('/upload', AuthAdmin, upload.single("file"), async (req, res) => {
+  const { courseId, name, description } = req.body
+  try {
+    const validateSchema = uploadScheama.safeParse({ courseId, name, description })
+    if (!validateSchema.success) {
+      res.status(403).json({
+        msg: `Invalid Input!!`
+      })
+    } else {
+      const file = req.file as Express.MulterS3.File;
+      const url = file.location;
+      const data = UploadVideo({ courseId, name, description, url })
+      res.status(200).json({
+        msg: `Video Uploaded!!`
+      })
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(403).json({
+      msg: `Upload Failed!!`
+    })
+  }
+})
 
 export default courseRouter
