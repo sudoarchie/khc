@@ -46,5 +46,32 @@ async function DeleteCourse({ id }: { id: string }) {
     throw err
   }
 }
+interface Update {
+  id: string,
+  name: string,
+  description: string,
+  subjectId: string,
+  thumbnail: string,
+  price: number
+}
+async function UpdateCourse({ id, name, description, subjectId, thumbnail, price }: Update) {
+  try {
+    const data = prisma.course.update({
+      where: {
+        id
+      },
+      data: {
+        name,
+        description,
+        subjectId,
+        thumbnail,
+        price
+      }
+    })
+    return data
+  } catch (err) {
+    throw err
+  }
+}
 
-export { CreateCourse, GetAllCourse, DeleteCourse }
+export { CreateCourse, GetAllCourse, DeleteCourse, UpdateCourse }

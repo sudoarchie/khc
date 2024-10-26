@@ -1,6 +1,6 @@
 import express from 'express'
 import { z } from 'zod'
-import { CreateCourse, DeleteCourse, GetAllCourse } from '../services/courseService'
+import { CreateCourse, DeleteCourse, GetAllCourse, UpdateCourse } from '../services/courseService'
 import { AuthAdmin } from '../middlewares/adminauthmiddleware'
 import { upload } from '../utils/uploadfile'
 import { AuthStudent } from '../middlewares/studentauthmiddleware'
@@ -35,7 +35,7 @@ courseRouter.post('/add', AuthAdmin, upload.single("file"), async (req, res) => 
 
 
       const data = await CreateCourse({ name, description, subjectId, price: newprice, thumbnail })
-      res.status(403).json({
+      res.status(200).json({
         msg: `Course Created!!`
       })
     }
@@ -61,7 +61,7 @@ courseRouter.get('/', async (req, res) => {
   }
 })
 
-courseRouter.delete('/', async (req, res) => {
+courseRouter.delete('/', AuthAdmin, async (req, res) => {
   const { id } = req.body
   try {
     const data = await DeleteCourse({ id })
@@ -75,6 +75,37 @@ courseRouter.delete('/', async (req, res) => {
   }
 })
 
+courseRouter.put('/', AuthAdmin, upload.single("file"), async (req, res) => {
 
+  let { id, name, description, thumbnail, subjectId, price } = req.body
+  try {
+    const validateSchema = addScheam.safeParse({ name, description, subjectId, price })
+    let newprice = parseInt(price)
+    console.log(validateSchema.error)
+    if (!validateSchema.success) {
+      res.status(403).json({
+        msg: `Invalid Input`
+      })
+    } else {
+      if (!thumbnail) {
+        if (req.file) {
+          const file = req.file as Express.MulterS3.File;
+          thumbnail = file.location;
+        }
+      }
+      const data = UpdateCourse({ id, name, description, thumbnail, subjectId, price: newprice })
+      res.status(200).json({
+        msg: `Course Updated!!`
+      })
+    }
+
+  } catch (err) {
+    console.log(err)
+    res.status(403).json({
+      msg: `Unable to Update Course`
+    })
+
+  }
+})
 
 export default courseRouter
