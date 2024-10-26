@@ -27,10 +27,24 @@ async function CreateCourse({ name, description, subjectId, thumbnail, price }: 
 
 async function GetAllCourse() {
   try {
-    const data = await prisma.course.findMany({})
+    const data = await prisma.course.findMany()
     return data
   } catch (error) {
     throw error
+  }
+}
+
+async function GetCourseById({ id }: { id: string }) {
+  try {
+    const data = await prisma.course.findUnique({
+      where: {
+        id
+      }
+    })
+    return data
+  } catch (err) {
+    throw err
+
   }
 }
 
@@ -74,4 +88,4 @@ async function UpdateCourse({ id, name, description, subjectId, thumbnail, price
   }
 }
 
-export { CreateCourse, GetAllCourse, DeleteCourse, UpdateCourse }
+export { CreateCourse, GetCourseById, GetAllCourse, DeleteCourse, UpdateCourse }

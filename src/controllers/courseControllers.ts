@@ -1,6 +1,6 @@
 import express from 'express'
 import { z } from 'zod'
-import { CreateCourse, DeleteCourse, GetAllCourse, UpdateCourse } from '../services/courseService'
+import { CreateCourse, DeleteCourse, GetAllCourse, GetCourseById, UpdateCourse } from '../services/courseService'
 import { AuthAdmin } from '../middlewares/adminauthmiddleware'
 import { upload } from '../utils/uploadfile'
 import { AuthStudent } from '../middlewares/studentauthmiddleware'
@@ -47,12 +47,32 @@ courseRouter.post('/add', AuthAdmin, upload.single("file"), async (req, res) => 
   }
 })
 
-courseRouter.get('/', async (req, res) => {
+courseRouter.get('/all', async (req, res) => {
   try {
     const data = await GetAllCourse()
     res.status(200).json({
       data
     })
+  } catch (err) {
+    console.log(err)
+    res.status(403).json({
+      msg: `Unable to fetch Course!!`
+    })
+  }
+})
+
+courseRouter.get("/", async (req, res) => {
+  try {
+    const { id } = req.body
+    if (!id) {
+      console.log(id)
+      res.status(404).json("No Course Found!!")
+    } else {
+      const data = await GetCourseById({ id })
+      res.status(200).json({
+        data
+      })
+    }
   } catch (err) {
     console.log(err)
     res.status(403).json({
@@ -107,5 +127,6 @@ courseRouter.put('/', AuthAdmin, upload.single("file"), async (req, res) => {
 
   }
 })
+
 
 export default courseRouter
