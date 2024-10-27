@@ -1,6 +1,6 @@
 import express from 'express'
 import { z } from 'zod'
-import { CreateCourse, DeleteCourse, GetAllCourse, GetCourseById, GetVideos, UpdateCourse, UploadVideo } from '../services/courseService'
+import { CreateCourse, DeleteCourse, DeleteVideos, GetAllCourse, GetCourseById, GetVideos, UpdateCourse, UploadVideo } from '../services/courseService'
 import { AuthAdmin } from '../middlewares/adminauthmiddleware'
 import { upload } from '../utils/uploadfile'
 import { AuthStudent } from '../middlewares/studentauthmiddleware'
@@ -170,4 +170,17 @@ courseRouter.get('/video', async (req, res) => {
   }
 })
 
+courseRouter.delete('/video', AuthAdmin, async (req, res) => {
+  const { id } = req.body
+  try {
+    const data = await DeleteVideos({ id })
+    res.status(200).json({
+      msg: `Deleted!!`
+    })
+  } catch (error) {
+    res.status(403).json({
+      msg: `Unable to delete!!`
+    })
+  }
+})
 export default courseRouter

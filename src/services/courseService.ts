@@ -123,4 +123,17 @@ async function GetVideos({ courseId }: { courseId: string }) {
   }
 }
 
-export { CreateCourse, GetCourseById, GetAllCourse, DeleteCourse, UpdateCourse, UploadVideo, GetVideos }
+async function DeleteVideos({ id }: { id: string }) {
+  try {
+    const data = await prisma.courseVideo.delete({
+      where: {
+        id
+      }
+    })
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export { CreateCourse, GetCourseById, GetAllCourse, DeleteCourse, UpdateCourse, UploadVideo, GetVideos, DeleteVideos }
