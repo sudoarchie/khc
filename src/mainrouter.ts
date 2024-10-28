@@ -11,6 +11,7 @@ import AssignmentSubmitRouter from "./controllers/assignmentSubmitControllers";
 import StudentTeacherRouter from "./controllers/studentTeacherControllers";
 import enrollmentRouter from "./controllers/enrollmentControllers";
 import courseRouter from "./controllers/courseControllers";
+import EnquireRouter from "./controllers/EnquireControllers";
 
 const mainRouter = express.Router();
 
@@ -26,4 +27,5 @@ mainRouter.use('/submitassignment', AssignmentSubmitRouter)
 mainRouter.use('/studentteacher', StudentTeacherRouter)
 mainRouter.use('/enroll', enrollmentRouter)
 mainRouter.use('/course', courseRouter)
+mainRouter.use('/enquiry', EnquireRouter)
 export default mainRouter;
