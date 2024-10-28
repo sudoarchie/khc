@@ -17,4 +17,17 @@ async function CreateEnquire({ email, mobileNo, message }: { email: string, mobi
   }
 }
 
-export { CreateEnquire }
+async function GetEnquire({ take, skip }: { take: number, skip: number }) {
+  try {
+
+    const data = await prisma.enquire.findMany({
+      take: take,
+      skip: skip
+    })
+    return data
+  } catch (err) {
+    throw err
+  }
+}
+
+export { CreateEnquire, GetEnquire }

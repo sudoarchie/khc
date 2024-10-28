@@ -1,5 +1,5 @@
 import express from 'express'
-import { CreateEnquire } from '../services/EnquireService';
+import { CreateEnquire, GetEnquire } from '../services/EnquireService';
 import { z } from 'zod';
 
 const EnquireRouter = express.Router()
@@ -28,6 +28,25 @@ EnquireRouter.post('/', async (req, res) => {
   } catch (error) {
     res.status(403).json({
       msg: `Unable to Send Enquiry!!`
+    })
+  }
+})
+
+EnquireRouter.get("/", async (req, res) => {
+  const take = parseInt(req.query.take as string) || 15
+  let skip = take - 15;
+  if (skip < 0) {
+    skip = 0;
+  }
+  try {
+    const data = await GetEnquire({ take, skip })
+    res.status(200).json({
+      data
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(403).json({
+      msg: `Unable to Fetch Enquire!!`
     })
   }
 })
