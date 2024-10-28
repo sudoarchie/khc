@@ -48,9 +48,11 @@ BlogRouter.post('/add', AuthAdmin, upload.single("file"), async (req, res) => {
 })
 
 BlogRouter.get('/', async (req, res) => {
-  const take = req.body
+  const take = parseInt(req.query.take as string) || 10;
+
+
   try {
-    const data = await GetBlog(take)
+    const data = await GetBlog({ take })
     res.status(200).json({
       data
     })
