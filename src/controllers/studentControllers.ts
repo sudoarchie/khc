@@ -6,6 +6,8 @@ import {
 } from "../services/studentService";
 import { AuthAdmin } from "../middlewares/adminauthmiddleware";
 import { z } from "zod";
+import { AuthStudent } from "../middlewares/studentauthmiddleware";
+import ExtractId from "../utils/extractIdfromToken";
 const studentRouter = express.Router();
 
 const signupSchema = z.object({
@@ -102,5 +104,21 @@ studentRouter.get("/data", AuthAdmin, async (req, res) => {
     });
   }
 });
+
+studentRouter.get('/validate', (req, res) => {
+
+  const token = req.cookies.studenttoken
+  if (!token) {
+    res.status(403).json({
+      validate: false
+    })
+  }
+  else {
+    const id = ExtractId({ token })
+    res.status(200).json({
+      validate: true,
+    })
+  }
+})
 
 export default studentRouter;
