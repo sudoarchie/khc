@@ -12,6 +12,7 @@ import StudentTeacherRouter from "./controllers/studentTeacherControllers";
 import enrollmentRouter from "./controllers/enrollmentControllers";
 import courseRouter from "./controllers/courseControllers";
 import EnquireRouter from "./controllers/EnquireControllers";
+import generalVideoRouter from "./controllers/generalVideoControllers";
 
 const mainRouter = express.Router();
 
@@ -28,4 +29,5 @@ mainRouter.use('/studentteacher', StudentTeacherRouter)
 mainRouter.use('/enroll', enrollmentRouter)
 mainRouter.use('/course', courseRouter)
 mainRouter.use('/enquiry', EnquireRouter)
+mainRouter.use('/video', generalVideoRouter)
 export default mainRouter;
