@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  StudentDashboardData,
   StudentData,
   StudentLogin,
   StudentSignUp,
@@ -121,4 +122,19 @@ studentRouter.get('/validate', (req, res) => {
   }
 })
 
+studentRouter.get('/dashboarddata', AuthStudent, async (req, res) => {
+  const token = req.cookies.studenttoken;
+  const id = ExtractId({ token })
+  try {
+    const data = await StudentDashboardData({ id })
+    res.status(200).json({
+      data
+    })
+  } catch (err) {
+    console.log(err)
+    res.status(403).json({
+      msg: `Unable to get data!!`
+    })
+  }
+})
 export default studentRouter;

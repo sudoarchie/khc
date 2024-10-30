@@ -106,4 +106,35 @@ async function StudentData({ skip, take }: { skip: number; take: number }) {
     else throw new Error("Something went wrong!!");
   }
 }
-export { StudentLogin, StudentSignUp, StudentData };
+
+async function StudentDashboardData({ id }: { id: string }) {
+  try {
+    const enrollment = await prisma.enrollment.count({
+      where: {
+        studentId: id
+      }
+    })
+    const Assignment = await prisma.studentAssignment.count({
+      where: {
+        studentId: id
+      }
+    })
+    const AvgMarks = await prisma.assignmentSubmitGrade.aggregate({
+      _avg: {
+        marks: true
+      },
+      where: {
+        assignmentSubmit: {
+          studentassignment: {
+            studentId: id
+          }
+        }
+      }
+    })
+    return { enrollment, Assignment, AvgMarks }
+  } catch (err) {
+    throw err
+  }
+
+}
+export { StudentLogin, StudentSignUp, StudentData, StudentDashboardData };
