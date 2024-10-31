@@ -2,7 +2,7 @@ import express from 'express'
 import { z } from 'zod'
 import { AuthAdmin } from '../middlewares/adminauthmiddleware'
 import { upload } from '../utils/uploadfile'
-import { PostGeneralVideos } from '../services/generalVideoService'
+import { Getlatest, PostGeneralVideos } from '../services/generalVideoService'
 const generalVideoRouter = express.Router()
 const postSchema = z.object({
   name: z.string(),
@@ -40,13 +40,31 @@ generalVideoRouter.post('/', AuthAdmin, upload.single("file"), async (req, res) 
     })
   }
 })
-
+const validateGet = z.object({
+  take: z.number(),
+  skip: z.number()
+})
 generalVideoRouter.get('/', async (req, res) => {
-  const { take, skip } = req.query
+  const take = parseInt(req.query.take as string) || 10;
+  const skip = parseInt(req.query.skip as string) || 0
   try {
+    const validateSchema = validateGet.safeParse({ take, skip })
+    if (!validateSchema.success) {
+      res.status(403).json({
+        msg: `Invalid Input!!`
+      })
+    } else {
 
+      const data = await Getlatest({ take, skip })
+      res.status(200).json({
+        data
+      })
+    }
   } catch (error) {
-
+    console.log(error)
+    res.status(403).json({
+      msg: `Unable to fetch data!!`
+    })
   }
 })
 

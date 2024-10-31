@@ -15,4 +15,18 @@ async function PostGeneralVideos({ name, discription, url }: { name: string, dis
   }
 }
 
-export { PostGeneralVideos }
+async function Getlatest({ take, skip }: { take: number, skip: number }) {
+  try {
+    const data = await prisma.generalVideo.findMany({
+      orderBy: {
+        createdAt: 'desc'
+      },
+      take, skip
+    })
+    return data
+  } catch (err) {
+    throw err
+  }
+}
+
+export { PostGeneralVideos, Getlatest }
