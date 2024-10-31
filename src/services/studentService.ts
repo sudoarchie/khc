@@ -131,7 +131,8 @@ async function StudentDashboardData({ id }: { id: string }) {
         }
       }
     })
-    return { enrollment, Assignment, AvgMarks }
+    const testmarks = AvgMarks._avg.marks
+    return { enrollment, Assignment, testmarks }
   } catch (err) {
     throw err
   }
