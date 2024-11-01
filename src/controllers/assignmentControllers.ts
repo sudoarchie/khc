@@ -16,7 +16,7 @@ const AssignmentRouter = express.Router();
 
 AssignmentRouter.get("/", AuthStudent, async (req, res) => {
   try {
-    const { take } = req.body;
+    const take = parseInt(req.query.take as string);
     const data = req.cookies.studenttoken;
     const token = data;
     const StudentId = ExtractId({ token });
@@ -120,7 +120,7 @@ const AssignmentAddTeacher = z.object({
   description: z.string(),
   subjectId: z.string(),
   studentId: z.string(),
-  deadline: z.string().date()
+  deadline: z.string().date(),
 });
 AssignmentRouter.post(
   "/addbyteacher",
@@ -136,7 +136,7 @@ AssignmentRouter.post(
         description,
         subjectId,
         studentId,
-        deadline
+        deadline,
       });
 
       if (!validate.success) {
@@ -167,7 +167,7 @@ AssignmentRouter.post(
           studentId,
           assignmentId,
           teacherId,
-          deadline
+          deadline,
         });
         res.status(200).json({
           msg: `Assignment assigned to Student`,
@@ -183,7 +183,7 @@ AssignmentRouter.post(
 const AssignSchema = z.object({
   assignmentId: z.string(),
   studentId: z.string(),
-  deadline: z.string().date()
+  deadline: z.string().date(),
 });
 AssignmentRouter.post("/assign", AuthTeacher, async (req, res) => {
   try {
@@ -191,14 +191,23 @@ AssignmentRouter.post("/assign", AuthTeacher, async (req, res) => {
 
     const token = req.cookies.teachertoken.token;
 
-    const validateSchema = AssignSchema.safeParse({ assignmentId, studentId, deadline });
+    const validateSchema = AssignSchema.safeParse({
+      assignmentId,
+      studentId,
+      deadline,
+    });
     if (!validateSchema.success) {
       res.status(403).json({
         msg: `Invalid Input`,
       });
     } else {
       const teacherId = ExtractId({ token });
-      const data = await AssignStudent({ studentId, assignmentId, teacherId, deadline });
+      const data = await AssignStudent({
+        studentId,
+        assignmentId,
+        teacherId,
+        deadline,
+      });
       res.status(200).json({
         msg: `Assigned to Student`,
       });
