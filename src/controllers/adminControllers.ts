@@ -1,36 +1,50 @@
-import express from "express"
+import express from "express";
 import { AdminSignIn } from "../services/adminService";
-import { z } from 'zod'
+import { z } from "zod";
+import ExtractId from "../utils/extractIdfromToken";
 const adminRouter = express.Router();
 const adminSchema = z.object({
   email: z.string().email(`Invalid email formate`),
-  password: z.string().min(8, 'Password must contain at least 8 characters'),
-})
+  password: z.string().min(8, "Password must contain at least 8 characters"),
+});
 
 adminRouter.post("/login", async (req, res) => {
-  const email = req.body.email
-  const password = req.body.password
+  const email = req.body.email;
+  const password = req.body.password;
   try {
-    const data = adminSchema.safeParse({ email, password })
+    const data = adminSchema.safeParse({ email, password });
     if (!data.success) {
-      console.log(`Invalid Input`)
+      console.log(`Invalid Input`);
       res.status(403).json({
-        msg: `Invalid Input`
-      })
+        msg: `Invalid Input`,
+      });
     } else {
-
-      const token = await AdminSignIn({ email, password })
-      console.log(token)
-      res.cookie("admintoken", token)
+      const token = await AdminSignIn({ email, password });
+      console.log(token);
+      res.cookie("admintoken", token);
       res.status(200).json({
-        msg: "Login Successful!!"
-      })
-
+        msg: "Login Successful!!",
+      });
     }
   } catch (err: any) {
     res.status(401).json({
-      msg: err.message
-    })
+      msg: err.message,
+    });
   }
-})
-export default adminRouter
+});
+adminRouter.get("/validate", (req, res) => {
+  const token = req.cookies.admintoken;
+  console.log(token);
+  if (!token) {
+    res.status(403).json({
+      validate: false,
+    });
+  } else {
+    const id = ExtractId({ token });
+    res.status(200).json({
+      validate: true,
+      id,
+    });
+  }
+});
+export default adminRouter;
