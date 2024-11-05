@@ -92,7 +92,7 @@ studentRouter.post("/login", async (req, res) => {
 });
 
 studentRouter.get("/data", AuthAdmin, async (req, res) => {
-  const { take } = req.body;
+  const take = parseInt(req.query.take as string);
   const skip = take - 10;
   try {
     const data = await StudentData({ skip, take });
@@ -106,35 +106,33 @@ studentRouter.get("/data", AuthAdmin, async (req, res) => {
   }
 });
 
-studentRouter.get('/validate', (req, res) => {
-
-  const token = req.cookies.studenttoken
+studentRouter.get("/validate", (req, res) => {
+  const token = req.cookies.studenttoken;
   if (!token) {
     res.status(403).json({
-      validate: false
-    })
-  }
-  else {
-    const id = ExtractId({ token })
+      validate: false,
+    });
+  } else {
+    const id = ExtractId({ token });
     res.status(200).json({
       validate: true,
-    })
+    });
   }
-})
+});
 
-studentRouter.get('/dashboarddata', AuthStudent, async (req, res) => {
+studentRouter.get("/dashboarddata", AuthStudent, async (req, res) => {
   const token = req.cookies.studenttoken;
-  const id = ExtractId({ token })
+  const id = ExtractId({ token });
   try {
-    const data = await StudentDashboardData({ id })
+    const data = await StudentDashboardData({ id });
     res.status(200).json({
-      data
-    })
+      data,
+    });
   } catch (err) {
-    console.log(err)
+    console.log(err);
     res.status(403).json({
-      msg: `Unable to get data!!`
-    })
+      msg: `Unable to get data!!`,
+    });
   }
-})
+});
 export default studentRouter;
