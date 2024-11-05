@@ -13,7 +13,7 @@ const studentRouter = express.Router();
 
 const signupSchema = z.object({
   email: z.string().email(),
-  mobileNo: z.number(),
+  mobileNo: z.string(),
   name: z.string(),
   password: z.string().min(8, "Password cannot be less then 8 letters"),
   country: z.string(),
