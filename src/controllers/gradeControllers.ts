@@ -58,7 +58,7 @@ gradeRouter.get("/data", async (req, res) => {
 
 const dataCurriculumwiseSchema = z.string();
 gradeRouter.get("/datacurriculumwise", async (req, res) => {
-  const { curriculumId } = req.body;
+  const curriculumId = req.query.curriculumId as string;
   try {
     const validateSchema = dataCurriculumwiseSchema.safeParse(curriculumId);
     if (!validateSchema.success) {
