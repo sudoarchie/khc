@@ -10,7 +10,7 @@ import { z } from "zod";
 const subjectRouter = express.Router();
 
 subjectRouter.get("/data", async (req, res) => {
-  const { gradeId } = req.body;
+  const gradeId = req.query.gradeId as string;
   try {
     const data = await GetSubject({ gradeId });
     res.status(200).json({
