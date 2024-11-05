@@ -10,7 +10,7 @@ interface Student {
   email: string;
   password: string;
   name: string;
-  mobileNo: number;
+  mobileNo: string;
   country: string;
   gradeId: string;
   curriculumId: string;
