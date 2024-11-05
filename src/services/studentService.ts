@@ -85,7 +85,7 @@ async function StudentLogin({
       id: student.id,
       email: student.email,
     },
-    process.env.JWT_SECRET
+    process.env.JWT_SECRET,
   );
 
   return {
@@ -99,11 +99,42 @@ async function StudentData({ skip, take }: { skip: number; take: number }) {
     const result = await prisma.student.findMany({
       skip: skip,
       take: take,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        mobileNo: true,
+        country: true,
+        Enrollment: {
+          select: {
+            subject: {
+              select: {
+                name: true,
+              },
+            },
+            teacher: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+        grade: {
+          select: {
+            name: true,
+            curriculum: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+        createdAt: true,
+      },
     });
     return result;
   } catch (err) {
-    if (err) throw err;
-    else throw new Error("Something went wrong!!");
+    throw err;
   }
 }
 
@@ -111,31 +142,30 @@ async function StudentDashboardData({ id }: { id: string }) {
   try {
     const enrollment = await prisma.enrollment.count({
       where: {
-        studentId: id
-      }
-    })
+        studentId: id,
+      },
+    });
     const Assignment = await prisma.studentAssignment.count({
       where: {
-        studentId: id
-      }
-    })
+        studentId: id,
+      },
+    });
     const AvgMarks = await prisma.assignmentSubmitGrade.aggregate({
       _avg: {
-        marks: true
+        marks: true,
       },
       where: {
         assignmentSubmit: {
           studentassignment: {
-            studentId: id
-          }
-        }
-      }
-    })
-    const testmarks = AvgMarks._avg.marks
-    return { enrollment, Assignment, testmarks }
+            studentId: id,
+          },
+        },
+      },
+    });
+    const testmarks = AvgMarks._avg.marks;
+    return { enrollment, Assignment, testmarks };
   } catch (err) {
-    throw err
+    throw err;
   }
-
 }
 export { StudentLogin, StudentSignUp, StudentData, StudentDashboardData };
