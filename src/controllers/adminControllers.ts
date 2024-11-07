@@ -1,7 +1,8 @@
 import express from "express";
-import { AdminSignIn } from "../services/adminService";
+import { AdminDashboard, AdminSignIn } from "../services/adminService";
 import { z } from "zod";
 import ExtractId from "../utils/extractIdfromToken";
+import { AuthAdmin } from "../middlewares/adminauthmiddleware";
 const adminRouter = express.Router();
 const adminSchema = z.object({
   email: z.string().email(`Invalid email formate`),
@@ -44,6 +45,19 @@ adminRouter.get("/validate", (req, res) => {
     res.status(200).json({
       validate: true,
       id,
+    });
+  }
+});
+
+adminRouter.get("/dashboard", AuthAdmin, async (req, res) => {
+  try {
+    const data = await AdminDashboard();
+    res.status(200).json({
+      data,
+    });
+  } catch (error) {
+    res.status(403).json({
+      msg: error,
     });
   }
 });
