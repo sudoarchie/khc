@@ -3,6 +3,7 @@ import { AuthAdmin } from "../middlewares/adminauthmiddleware";
 import { AuthStudent } from "../middlewares/studentauthmiddleware";
 import {
   AddAssignment,
+  AllAssignmentByAdmin,
   AssignStudent,
   GetAssignment,
   SpecialAssignment,
@@ -90,7 +91,7 @@ AssignmentRouter.post(
         error: err.message, // Include error details
       });
     }
-  }
+  },
 );
 
 const SubjectSchemea = z.string();
@@ -178,7 +179,7 @@ AssignmentRouter.post(
         msg: `Error while creating new assignment`,
       });
     }
-  }
+  },
 );
 const AssignSchema = z.object({
   assignmentId: z.string(),
@@ -215,6 +216,20 @@ AssignmentRouter.post("/assign", AuthTeacher, async (req, res) => {
   } catch (err) {
     res.status(403).json({
       msg: `Error while Assigning to student`,
+    });
+  }
+});
+
+AssignmentRouter.get("/all", AuthAdmin, async (req, res) => {
+  const take = parseInt(req.query.take as string);
+  try {
+    const response = await AllAssignmentByAdmin(take);
+    res.status(200).json({
+      data: response,
+    });
+  } catch (err) {
+    res.status(403).json({
+      msg: "Unable to get data!!",
     });
   }
 });

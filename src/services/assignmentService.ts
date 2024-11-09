@@ -104,4 +104,26 @@ async function SpecialAssignment({ subjectId }: { subjectId: string }) {
   }
 }
 
-export { GetAssignment, AddAssignment, AssignStudent, SpecialAssignment };
+async function AllAssignmentByAdmin(take: number) {
+  let skip = take - 30;
+  if (skip < 0) {
+    skip = 0;
+  }
+  try {
+    const data = await prisma.assignment.findMany({
+      take,
+      skip,
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export {
+  GetAssignment,
+  AddAssignment,
+  AssignStudent,
+  SpecialAssignment,
+  AllAssignmentByAdmin,
+};
