@@ -7,10 +7,10 @@ import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 interface teacher {
-  name: string,
-  email: string,
-  mobileNo: string
-  password: string
+  name: string;
+  email: string;
+  mobileNo: string;
+  password: string;
 }
 async function TeacherSignUp({ name, email, mobileNo, password }: teacher) {
   console.log(process.env); // Debugging line to see if environment variables are loaded
@@ -25,25 +25,21 @@ async function TeacherSignUp({ name, email, mobileNo, password }: teacher) {
         password: hashedPassword,
       },
     });
-    return ({
-      msg: "Account created successful"
-    })
+    return {
+      msg: "Account created successful",
+    };
   } catch (error: any) {
-    if (error)
-      throw error
-    else
-      throw new Error("Something went wrong")
+    if (error) throw error;
+    else throw new Error("Something went wrong");
   }
 }
 
 interface teacherSignIn {
-  email: string,
-  password: string
+  email: string;
+  password: string;
 }
 
 async function TeacherLogin({ email, password }: teacherSignIn) {
-
-
   try {
     const teacher = await prisma.teacher.findUnique({
       where: {
@@ -52,16 +48,13 @@ async function TeacherLogin({ email, password }: teacherSignIn) {
     });
 
     if (!teacher) {
-      throw new Error("Username does not exist")
+      throw new Error("Username does not exist");
     }
 
-    const verifyPassword = await bcrypt.compare(
-      password,
-      teacher.password
-    );
+    const verifyPassword = await bcrypt.compare(password, teacher.password);
 
     if (!verifyPassword) {
-      throw new Error("Incorrect Password")
+      throw new Error("Incorrect Password");
     } else {
       // Ensure JWT_SECRET is set
       if (!process.env.JWT_SECRET) {
@@ -73,21 +66,42 @@ async function TeacherLogin({ email, password }: teacherSignIn) {
           id: teacher.id,
           email: teacher.email,
         },
-        process.env.JWT_SECRET || "MYsuperSECREATpassword" // Optional: Token expiration time
+        process.env.JWT_SECRET || "MYsuperSECREATpassword", // Optional: Token expiration time
       );
 
-
-      return ({
+      return {
         msg: "Login Successful",
-        token
-      })
+        token,
+      };
     }
   } catch (error: any) {
     if (error.message) {
-      return error
+      return error;
     } else {
-      throw new Error(error)
+      throw new Error(error);
     }
   }
 }
-export { TeacherLogin, TeacherSignUp };
+
+async function TeacherDataForAdmin(take: number) {
+  let skip = take - 30;
+  if (skip < 0) {
+    skip = 0;
+  }
+  try {
+    const data = await prisma.teacher.findMany({
+      take,
+      skip,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        mobileNo: true,
+      },
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+export { TeacherLogin, TeacherSignUp, TeacherDataForAdmin };
