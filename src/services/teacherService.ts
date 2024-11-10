@@ -104,4 +104,67 @@ async function TeacherDataForAdmin(take: number) {
     throw error;
   }
 }
-export { TeacherLogin, TeacherSignUp, TeacherDataForAdmin };
+
+async function TeacherProfile(id: string) {
+  try {
+    const data = await prisma.teacher.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        mobileNo: true,
+        teacherSubjects: {
+          select: {
+            subject: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+        Enrollment: {
+          select: {
+            student: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+async function TeacherSubject({
+  teacherId,
+  subjectId,
+}: {
+  teacherId: string;
+  subjectId: string;
+}) {
+  try {
+    const data = await prisma.teacherSubject.create({
+      data: {
+        teacherId,
+        subjectId,
+      },
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export {
+  TeacherLogin,
+  TeacherSignUp,
+  TeacherDataForAdmin,
+  TeacherProfile,
+  TeacherSubject,
+};
