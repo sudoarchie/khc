@@ -38,20 +38,25 @@ async function GetSubmittedAssignment({ teacherId }: { teacherId: string }) {
   }
 }
 
-async function MarksForAssignment({ assignmentSubmitId, marks }: { assignmentSubmitId: string, marks: number }) {
+async function MarksForAssignment({
+  assignmentSubmitId,
+  marks,
+}: {
+  assignmentSubmitId: string;
+  marks: number;
+}) {
   try {
     const data = await prisma.assignmentSubmitGrade.create({
       data: {
         assignmentSubmitId: assignmentSubmitId,
-        marks
-      }
-    })
-    return data
+        marks,
+      },
+    });
+    return data;
   } catch (err) {
-    console.log(err)
-    throw err
+    console.log(err);
+    throw err;
   }
-
 }
 
 async function GetMarks({ studentId }: { studentId: string }) {
@@ -60,15 +65,20 @@ async function GetMarks({ studentId }: { studentId: string }) {
       where: {
         assignmentSubmit: {
           studentassignment: {
-            studentId: studentId
-          }
-        }
-      }
-    })
-    return data
+            studentId: studentId,
+          },
+        },
+      },
+    });
+    return data;
   } catch (error) {
-    throw error
+    throw error;
   }
 }
 
-export { SubmitAssignment, GetSubmittedAssignment, MarksForAssignment, GetMarks };
+export {
+  SubmitAssignment,
+  GetSubmittedAssignment,
+  MarksForAssignment,
+  GetMarks,
+};
