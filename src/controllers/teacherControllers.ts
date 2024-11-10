@@ -2,10 +2,14 @@ import express from "express";
 import {
   TeacherDataForAdmin,
   TeacherLogin,
+  TeacherProfile,
   TeacherSignUp,
+  TeacherSubject,
 } from "../services/teacherService";
 import { z } from "zod";
 import { AuthAdmin } from "../middlewares/adminauthmiddleware";
+import { AuthTeacher } from "../middlewares/teacherauthmiddleware";
+import ExtractId from "../utils/extractIdfromToken";
 const teacherRouter = express.Router();
 
 const signupSchema = z.object({
@@ -76,6 +80,38 @@ teacherRouter.get("/all", AuthAdmin, async (req, res) => {
     console.log(error);
     res.status(403).json({
       msg: "Unable to fetch teacher data!!",
+    });
+  }
+});
+
+teacherRouter.get("/get", AuthAdmin, async (req, res) => {
+  const id = req.query.id as string;
+  try {
+    const response = await TeacherProfile(id);
+    res.status(200).json({
+      response,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(403).json({
+      msg: `Error while fetching the profile`,
+    });
+  }
+});
+
+teacherRouter.post("/subject", AuthTeacher, async (req, res) => {
+  const { subjectId } = req.body;
+  const token = req.cookies.teachertoken.token;
+  try {
+    const teacherId = ExtractId({ token });
+    const data = await TeacherSubject({ subjectId, teacherId });
+    res.status(200).json({
+      data,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(403).json({
+      msg: error,
     });
   }
 });
