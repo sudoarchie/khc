@@ -5,6 +5,7 @@ import {
   TeacherProfile,
   TeacherSignUp,
   TeacherSubject,
+  TeacherUpdate,
 } from "../services/teacherService";
 import { z } from "zod";
 import { AuthAdmin } from "../middlewares/adminauthmiddleware";
@@ -95,6 +96,20 @@ teacherRouter.get("/get", AuthAdmin, async (req, res) => {
     console.log(error);
     res.status(403).json({
       msg: `Error while fetching the profile`,
+    });
+  }
+});
+
+teacherRouter.post("/update", AuthAdmin || AuthTeacher, async (req, res) => {
+  const { id, name, email, mobileNo, password } = req.body;
+  try {
+    const data = await TeacherUpdate({ id, name, email, mobileNo, password });
+    res.status(200).json({
+      data,
+    });
+  } catch (err) {
+    res.status(403).json({
+      msg: `Unable to Update!!`,
     });
   }
 });
