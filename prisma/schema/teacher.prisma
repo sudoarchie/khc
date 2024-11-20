@@ -8,6 +8,7 @@ model Teacher {
 
   teacherSubjects TeacherSubject[]
   Enrollment      Enrollment[]
+  createdAt DateTime @default(now()) 
 }
 
 model TeacherSubject {
