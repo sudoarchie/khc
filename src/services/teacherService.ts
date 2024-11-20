@@ -116,6 +116,7 @@ async function TeacherProfile(id: string) {
         name: true,
         email: true,
         mobileNo: true,
+        createdAt: true,
         teacherSubjects: {
           select: {
             subject: {
@@ -141,6 +142,38 @@ async function TeacherProfile(id: string) {
     throw error;
   }
 }
+
+async function TeacherUpdate({
+  id,
+  name,
+  email,
+  mobileNo,
+  password,
+}: {
+  id: string;
+  name: string;
+  email: string;
+  mobileNo: string;
+  password: string;
+}) {
+  try {
+    const data = await prisma.teacher.update({
+      where: {
+        id,
+      },
+      data: {
+        name,
+        email,
+        mobileNo,
+        password,
+      },
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function TeacherSubject({
   teacherId,
   subjectId,
@@ -167,4 +200,5 @@ export {
   TeacherDataForAdmin,
   TeacherProfile,
   TeacherSubject,
+  TeacherUpdate,
 };
