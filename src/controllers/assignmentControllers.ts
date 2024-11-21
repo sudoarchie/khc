@@ -4,6 +4,7 @@ import { AuthStudent } from "../middlewares/studentauthmiddleware";
 import {
   AddAssignment,
   AllAssignmentByAdmin,
+  AssignmentDetail,
   AssignStudent,
   GetAssignment,
   SpecialAssignment,
@@ -228,8 +229,24 @@ AssignmentRouter.get("/all", AuthAdmin, async (req, res) => {
       data: response,
     });
   } catch (err) {
+    console.log(err);
     res.status(403).json({
       msg: "Unable to get data!!",
+    });
+  }
+});
+
+AssignmentRouter.get("/details", AuthAdmin, async (req, res) => {
+  const take = parseInt(req.query.take as string);
+  const id = req.query.id as string;
+  try {
+    const response = await AssignmentDetail({ id, take });
+    res.status(200).json({
+      response,
+    });
+  } catch (error) {
+    res.status(403).json({
+      msg: `Unable to fetch data!!`,
     });
   }
 });

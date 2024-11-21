@@ -113,6 +113,76 @@ async function AllAssignmentByAdmin(take: number) {
     const data = await prisma.assignment.findMany({
       take,
       skip,
+      select: {
+        id: true,
+        name: true,
+        url: true,
+        visible: true,
+        subject: {
+          select: {
+            name: true,
+          },
+        },
+        createdAt: true,
+      },
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function AssignmentDetail({ take, id }: { take: number; id: string }) {
+  let skip = take - 10;
+  if (skip < 0) {
+    skip = 0;
+  }
+  try {
+    const data = await prisma.assignment.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        name: true,
+        description: true,
+        url: true,
+        visible: true,
+        subject: {
+          select: {
+            name: true,
+          },
+        },
+        studentAssignment: {
+          take,
+          skip,
+          select: {
+            student: {
+              select: {
+                name: true,
+                email: true,
+                mobileNo: true,
+                grade: {
+                  select: {
+                    name: true,
+                  },
+                },
+              },
+            },
+            deadline: true,
+            Completed: true,
+            assignmentSubmit: {
+              select: {
+                SubmitUrl: true,
+                assignmentSubmitGrade: {
+                  select: {
+                    marks: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     });
     return data;
   } catch (error) {
@@ -126,4 +196,5 @@ export {
   AssignStudent,
   SpecialAssignment,
   AllAssignmentByAdmin,
+  AssignmentDetail,
 };

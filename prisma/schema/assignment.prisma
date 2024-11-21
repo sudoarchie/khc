@@ -8,4 +8,4 @@ model Assignment {
   subjectId         String              @db.ObjectId
   studentAssignment StudentAssignment[]
   createdAt         DateTime            @default(now())
-}
+}  
