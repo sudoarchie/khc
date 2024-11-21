@@ -239,12 +239,14 @@ AssignmentRouter.get("/all", AuthAdmin, async (req, res) => {
 AssignmentRouter.get("/details", AuthAdmin, async (req, res) => {
   const take = parseInt(req.query.take as string);
   const id = req.query.id as string;
+  console.log(id);
   try {
     const response = await AssignmentDetail({ id, take });
     res.status(200).json({
       response,
     });
   } catch (error) {
+    console.log(error);
     res.status(403).json({
       msg: `Unable to fetch data!!`,
     });
