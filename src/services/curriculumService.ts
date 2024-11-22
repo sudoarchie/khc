@@ -1,11 +1,10 @@
-import { PrismaClient } from "@prisma/client"
+import { PrismaClient } from "@prisma/client";
 
-
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 interface createCurriculum {
-  name: string
-  description: string
-  logoUrl: string
+  name: string;
+  description: string;
+  logoUrl: string;
 }
 async function Create({ name, description, logoUrl }: createCurriculum) {
   try {
@@ -13,41 +12,54 @@ async function Create({ name, description, logoUrl }: createCurriculum) {
       data: {
         name,
         description,
-        logoUrl
-      }
-    })
-    return ({
+        logoUrl,
+      },
+    });
+    return {
       msg: "Curriculum created Successfully",
-      curriculum: upload
-    })
-  }
-  catch (err) {
-    if (err)
-      throw err
-    else
-      throw new Error('Something went wrong!')
+      curriculum: upload,
+    };
+  } catch (err) {
+    if (err) throw err;
+    else throw new Error("Something went wrong!");
   }
 }
 
 async function Get() {
   try {
-    const data = await prisma.curriculum.findMany()
+    const data = await prisma.curriculum.findMany();
     return {
       msg: "Data fetched successfully",
-      data
-    }
+      data,
+    };
   } catch (err: unknown) {
     console.error("Error in Get function:", err);
     if (err instanceof Error) {
       return {
         msg: "Error fetching data",
-        error: err.message
-      }
+        error: err.message,
+      };
     } else {
       return {
         msg: "Error fetching data",
-        error: "An unknown error occurred"
-      }
+        error: "An unknown error occurred",
+      };
     }
   }
-} export { Create, Get }
+}
+
+async function GetList() {
+  try {
+    const data = await prisma.curriculum.findMany({
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export { Create, Get, GetList };
