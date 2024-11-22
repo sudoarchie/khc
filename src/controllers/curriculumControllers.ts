@@ -1,5 +1,5 @@
 import express from "express";
-import { Get, Create } from "../services/curriculumService";
+import { Get, Create, GetList } from "../services/curriculumService";
 import { AuthAdmin } from "../middlewares/adminauthmiddleware";
 import { upload } from "../utils/uploadfile";
 import { z } from "zod";
@@ -7,8 +7,8 @@ const curriculumRouter = express.Router();
 
 const addSchema = z.object({
   name: z.string(),
-  description: z.string()
-})
+  description: z.string(),
+});
 curriculumRouter.post(
   "/add",
   AuthAdmin,
@@ -16,11 +16,11 @@ curriculumRouter.post(
   async (req, res) => {
     const { name, description } = req.body;
     try {
-      const validateSchema = addSchema.safeParse({ name, description })
+      const validateSchema = addSchema.safeParse({ name, description });
       if (!validateSchema.success) {
         res.status(403).json({
-          msg: 'Invalid Inputs!!'
-        })
+          msg: "Invalid Inputs!!",
+        });
       } else {
         if (!req.file) {
           res.status(400).json({
@@ -43,7 +43,7 @@ curriculumRouter.post(
         msg: err instanceof Error ? err.message : "An unknown error occurred",
       });
     }
-  }
+  },
 );
 
 curriculumRouter.get("/data", async (req, res) => {
@@ -55,6 +55,19 @@ curriculumRouter.get("/data", async (req, res) => {
   } catch (err) {
     res.status(403).json({
       msg: err instanceof Error ? err.message : "Something went wrong!!",
+    });
+  }
+});
+
+curriculumRouter.get("/list", async (req, res) => {
+  try {
+    const data = await GetList();
+    res.status(200).json({
+      data,
+    });
+  } catch (error) {
+    res.status(403).json({
+      msg: error,
     });
   }
 });
