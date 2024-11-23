@@ -54,5 +54,18 @@ async function GetGradeByCurriculum({
     throw error;
   }
 }
+async function DeleteGrade({ id }: { id: string }) {
+  try {
+    const data = await prisma.grade.delete({
+      where: { id },
+    });
+    return {
+      msg: `Grade deleted successfully`,
+      data,
+    };
+  } catch (err) {
+    throw err;
+  }
+}
 
-export { CreateGrade, GetAllGrades, GetGradeByCurriculum };
+export { CreateGrade, GetAllGrades, GetGradeByCurriculum, DeleteGrade };
