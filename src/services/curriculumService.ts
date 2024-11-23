@@ -61,5 +61,17 @@ async function GetList() {
     throw error;
   }
 }
-
-export { Create, Get, GetList };
+async function DeleteCurriculum({ id }: { id: string }) {
+  try {
+    const data = await prisma.curriculum.delete({
+      where: { id },
+    });
+    return {
+      msg: "Curriculum deleted successfully",
+      data,
+    };
+  } catch (err) {
+    throw err;
+  }
+}
+export { Create, Get, GetList, DeleteCurriculum };
