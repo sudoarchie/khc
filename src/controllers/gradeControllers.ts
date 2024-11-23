@@ -3,6 +3,7 @@ import { z } from "zod";
 import { AuthAdmin } from "../middlewares/adminauthmiddleware";
 import {
   CreateGrade,
+  DeleteGrade,
   GetAllGrades,
   GetGradeByCurriculum,
 } from "../services/gradeService";
@@ -74,6 +75,19 @@ gradeRouter.get("/datacurriculumwise", async (req, res) => {
   } catch (err) {
     res.status(403).json({
       msg: `Error while fetching data`,
+    });
+  }
+});
+gradeRouter.delete("/delete", AuthAdmin, async (req, res) => {
+  const { id } = req.body;
+  try {
+    const data = await DeleteGrade({ id });
+    res.status(200).json({
+      data,
+    });
+  } catch (err) {
+    res.status(403).json({
+      msg: `Failed while deleting grade`,
     });
   }
 });
