@@ -13,7 +13,7 @@ model StudentAssignment {
 
 model AssignmentSubmit {
   id                    String                 @id @default(auto()) @map("_id") @db.ObjectId
-  studentassignment     StudentAssignment      @relation(fields: [studentAssignmentId], references: [id])
+  studentassignment     StudentAssignment      @relation(fields: [studentAssignmentId], references: [id], onDelete: Cascade)
   studentAssignmentId   String                 @unique @db.ObjectId
   assignmentSubmitGrade AssignmentSubmitGrade?
   SubmitUrl             String
@@ -22,6 +22,6 @@ model AssignmentSubmit {
 model AssignmentSubmitGrade {
   id                 String           @id @default(auto()) @map("_id") @db.ObjectId
   marks              Int
-  assignmentSubmit   AssignmentSubmit @relation(fields: [assignmentSubmitId], references: [id])
+  assignmentSubmit   AssignmentSubmit @relation(fields: [assignmentSubmitId], references: [id], onDelete: Cascade)
   assignmentSubmitId String           @unique @db.ObjectId
 }
