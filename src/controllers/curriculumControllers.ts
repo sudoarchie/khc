@@ -1,5 +1,10 @@
 import express from "express";
-import { Get, Create, GetList } from "../services/curriculumService";
+import {
+  Get,
+  Create,
+  GetList,
+  DeleteCurriculum,
+} from "../services/curriculumService";
 import { AuthAdmin } from "../middlewares/adminauthmiddleware";
 import { upload } from "../utils/uploadfile";
 import { z } from "zod";
@@ -43,7 +48,7 @@ curriculumRouter.post(
         msg: err instanceof Error ? err.message : "An unknown error occurred",
       });
     }
-  },
+  }
 );
 
 curriculumRouter.get("/data", async (req, res) => {
@@ -68,6 +73,21 @@ curriculumRouter.get("/list", async (req, res) => {
   } catch (error) {
     res.status(403).json({
       msg: error,
+    });
+  }
+});
+
+curriculumRouter.delete("/delete", AuthAdmin, async (req, res) => {
+  const { id } = req.body;
+  try {
+    const data = await DeleteCurriculum({ id });
+    res.status(200).json({
+      data,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(403).json({
+      msg: `Failed while deleting curriculum`,
     });
   }
 });
