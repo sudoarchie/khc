@@ -3,6 +3,6 @@ model Grade {
   name         String
   student      Student[]
   subjects     Subject[]
-  curriculum   Curriculum @relation(fields: [curriculumId], references: [id])
+  curriculum   Curriculum @relation(fields: [curriculumId], references: [id], onDelete: Cascade)
   curriculumId String     @db.ObjectId
 }
