@@ -2,7 +2,7 @@ model Course {
   id          String        @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   description String
-  subject     Subject       @relation(fields: [subjectId], references: [id])
+  subject     Subject       @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   subjectId   String        @db.ObjectId
   price       Int
   thumbnail   String
@@ -15,9 +15,9 @@ model Course {
 
 model CourseEnroll {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  student       Student  @relation(fields: [studentId], references: [id])
+  student       Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
   studentId     String   @db.ObjectId
-  course        Course   @relation(fields: [courseId], references: [id])
+  course        Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   courseId      String   @db.ObjectId
   transactionId String
   expireDate    String
@@ -27,7 +27,7 @@ model CourseEnroll {
 
 model CourseVideo {
   id          String @id @default(auto()) @map("_id") @db.ObjectId
-  course      Course @relation(fields: [courseId], references: [id])
+  course      Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
   courseId    String @db.ObjectId
   name        String
   description String
