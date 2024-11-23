@@ -2,9 +2,9 @@ model Enrollment {
   id             String   @id @default(auto()) @map("_id") @db.ObjectId
   student        Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
   studentId      String   @db.ObjectId
-  teacher        Teacher  @relation(fields: [teacherId], references: [id])
+  teacher        Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
   teacherId      String   @db.ObjectId
-  subject        Subject  @relation(fields: [subjectId], references: [id])
+  subject        Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   subjectId      String   @db.ObjectId
   transactionId  String
   videoAllow     Boolean
