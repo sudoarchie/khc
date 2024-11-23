@@ -1,16 +1,16 @@
 model Student {
   id                String              @id @default(auto()) @map("_id") @db.ObjectId
   email             String              @unique
-  mobileNo          String                 @unique
+  mobileNo          String              @unique
   country           String
   name              String
   password          String
-  grade             Grade               @relation(fields: [gradeId], references: [id])
+  grade             Grade               @relation(fields: [gradeId], references: [id], onDelete: Cascade)
   gradeId           String              @db.ObjectId
   Enrollment        Enrollment[]
   CourseEnroll      CourseEnroll[]
   StudentAssignment StudentAssignment[]
   createdAt         DateTime            @default(now())
-  Curriculum        Curriculum?         @relation(fields: [curriculumId], references: [id])
+  Curriculum        Curriculum?         @relation(fields: [curriculumId], references: [id], onDelete: Cascade)
   curriculumId      String?             @db.ObjectId
 }
