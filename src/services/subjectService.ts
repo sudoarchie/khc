@@ -57,7 +57,28 @@ async function UpdateSubject({
     else throw new Error(`Unable to update!!`);
   }
 }
-
+async function GetAllSubjects() {
+  try {
+    const data = await prisma.subject.findMany({
+      select: {
+        name: true,
+        grade: {
+          select: {
+            name: true,
+            curriculum: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    return data;
+  } catch (error) {
+    throw new Error(`Unable to fetch the data ${error}`);
+  }
+}
 async function DeleteSubject({ id }: { id: string }) {
   try {
     const deletedSubject = await prisma.subject.delete({
@@ -71,4 +92,10 @@ async function DeleteSubject({ id }: { id: string }) {
   }
 }
 
-export { GetSubject, CreateSubject, UpdateSubject, DeleteSubject };
+export {
+  GetSubject,
+  CreateSubject,
+  UpdateSubject,
+  DeleteSubject,
+  GetAllSubjects,
+};

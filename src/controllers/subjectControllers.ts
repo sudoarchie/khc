@@ -2,6 +2,7 @@ import express from "express";
 import {
   CreateSubject,
   DeleteSubject,
+  GetAllSubjects,
   GetSubject,
   UpdateSubject,
 } from "../services/subjectService";
@@ -22,12 +23,25 @@ subjectRouter.get("/data", async (req, res) => {
     });
   }
 });
+subjectRouter.get("/all", async (req, res) => {
+  try {
+    const data = await GetAllSubjects();
+    res.status(200).json({
+      data: data,
+    });
+  } catch (err) {
+    res.status(403).json({
+      msg: `Cannot fetch the data ${err}`,
+    });
+  }
+});
 const addSchema = z.object({
   name: z.string(),
   gradeId: z.string(),
 });
 subjectRouter.post("/add", AuthAdmin, async (req, res) => {
   try {
+    console.log(1);
     const { name, gradeId } = req.body;
     const validateSchema = addSchema.safeParse({ name, gradeId });
     if (!validateSchema.success) {
@@ -41,6 +55,7 @@ subjectRouter.post("/add", AuthAdmin, async (req, res) => {
       });
     }
   } catch (error) {
+    console.log(error);
     res.status(403).json({
       msg: `Could not create subject due to ${error}`,
     });
