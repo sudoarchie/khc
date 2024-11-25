@@ -35,22 +35,15 @@ gradeRouter.post("/add", AuthAdmin, async (req, res) => {
     });
   }
 });
-const dataSchema = z.number();
 gradeRouter.get("/data", async (req, res) => {
   try {
-    const { take } = req.body;
-    const validateSchema = dataSchema.safeParse(take);
-    if (!validateSchema.success) {
-      res.status(403).json({
-        msg: `Invalid Inputs!!`,
-      });
-    } else {
-      const data = await GetAllGrades({ take });
-      res.status(403).json({
-        data,
-      });
-    }
+    const take = parseInt(req.query.take as string);
+    const data = await GetAllGrades({ take });
+    res.status(200).json({
+      data,
+    });
   } catch (err) {
+    console.log(err);
     res.status(403).json({
       msg: `Failed while fetching data!!`,
     });

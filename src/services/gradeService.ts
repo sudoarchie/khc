@@ -24,9 +24,22 @@ async function CreateGrade({
 }
 
 async function GetAllGrades({ take }: { take: number }) {
-  const skip = take - 10;
+  let skip = take - 30;
+  if (skip < 0) {
+    skip = 0;
+  }
   try {
     const data = await prisma.grade.findMany({
+      select: {
+        id: true,
+        name: true,
+        curriculum: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
       take: take,
       skip: skip,
     });
