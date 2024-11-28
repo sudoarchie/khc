@@ -12,9 +12,9 @@ import { TagCountry } from "../services/countryService";
 const curriculumRouter = express.Router();
 
 const addSchema = z.object({
-  name: z.string(),
-  description: z.string(),
-  countryId: z.array(z.string().min(6)),
+  name: z.string({ message: "Invalid Name" }),
+  description: z.string({ message: "Invalid description" }),
+  countryId: z.array(z.string({ message: "Invalid Country!!" }).min(6)),
 });
 curriculumRouter.post(
   "/add",
@@ -30,7 +30,7 @@ curriculumRouter.post(
       });
       if (!validateSchema.success) {
         res.status(403).json({
-          msg: "Invalid Inputs!!",
+          msg: validateSchema.error,
         });
       } else {
         if (!req.file) {
