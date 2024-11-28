@@ -1,0 +1,15 @@
+
+model Country {
+  id                String                @id @default(auto()) @map("_id") @db.ObjectId
+  name              String
+  countryCurriculum CountryCurriculum[]
+}
+
+model CountryCurriculum {
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  country      Country      @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  countryId    String       @db.ObjectId
+  curriculum   Curriculum   @relation(fields: [curriculumId], references: [id], onDelete: Cascade)
+  curriculumId String       @db.ObjectId
+}
+
