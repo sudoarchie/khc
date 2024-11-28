@@ -8,20 +8,26 @@ import {
 import { AuthAdmin } from "../middlewares/adminauthmiddleware";
 import { upload } from "../utils/uploadfile";
 import { z } from "zod";
+import { TagCountry } from "../services/countryService";
 const curriculumRouter = express.Router();
 
 const addSchema = z.object({
   name: z.string(),
   description: z.string(),
+  countryId: z.array(z.string().min(6)),
 });
 curriculumRouter.post(
   "/add",
   AuthAdmin,
   upload.single("file"),
   async (req, res) => {
-    const { name, description } = req.body;
+    const { name, description, countryId } = req.body;
     try {
-      const validateSchema = addSchema.safeParse({ name, description });
+      const validateSchema = addSchema.safeParse({
+        name,
+        description,
+        countryId,
+      });
       if (!validateSchema.success) {
         res.status(403).json({
           msg: "Invalid Inputs!!",
@@ -38,6 +44,12 @@ curriculumRouter.post(
         const logoUrl = file.location;
 
         const data = await Create({ name, description, logoUrl });
+        countryId.map(async (country: string) => {
+          const assign = await TagCountry({
+            countryId: country,
+            curriculumId: data.curriculum.id,
+          });
+        });
         res.status(200).json({
           msg: data.msg,
           data: data.curriculum,
@@ -48,7 +60,7 @@ curriculumRouter.post(
         msg: err instanceof Error ? err.message : "An unknown error occurred",
       });
     }
-  }
+  },
 );
 
 curriculumRouter.get("/data", async (req, res) => {

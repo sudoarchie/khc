@@ -13,6 +13,7 @@ import enrollmentRouter from "./controllers/enrollmentControllers";
 import courseRouter from "./controllers/courseControllers";
 import EnquireRouter from "./controllers/EnquireControllers";
 import generalVideoRouter from "./controllers/generalVideoControllers";
+import countryRouter from "./controllers/countryControllers";
 
 const mainRouter = express.Router();
 
@@ -23,11 +24,12 @@ mainRouter.use("/curriculum", curriculumRouter);
 mainRouter.use("/subject", subjectRouter);
 mainRouter.use("/assignment", AssignmentRouter);
 mainRouter.use("/grade", gradeRouter);
-mainRouter.use('/blog', BlogRouter)
-mainRouter.use('/submitassignment', AssignmentSubmitRouter)
-mainRouter.use('/studentteacher', StudentTeacherRouter)
-mainRouter.use('/enroll', enrollmentRouter)
-mainRouter.use('/course', courseRouter)
-mainRouter.use('/enquiry', EnquireRouter)
-mainRouter.use('/video', generalVideoRouter)
+mainRouter.use("/blog", BlogRouter);
+mainRouter.use("/submitassignment", AssignmentSubmitRouter);
+mainRouter.use("/studentteacher", StudentTeacherRouter);
+mainRouter.use("/enroll", enrollmentRouter);
+mainRouter.use("/course", courseRouter);
+mainRouter.use("/enquiry", EnquireRouter);
+mainRouter.use("/video", generalVideoRouter);
+mainRouter.use("/country", countryRouter);
 export default mainRouter;
