@@ -1,5 +1,9 @@
 import express from "express";
-import { CreateCountry, GetAllCountry } from "../services/countryService";
+import {
+  CreateCountry,
+  GetAll,
+  GetAllCountry,
+} from "../services/countryService";
 import { AuthAdmin } from "../middlewares/adminauthmiddleware";
 import { z } from "zod";
 
@@ -35,6 +39,18 @@ countryRouter.post("/", AuthAdmin, async (req, res) => {
   } catch (error) {
     res.status(400).json({
       msg: `Unable to Create Country ${error}`,
+    });
+  }
+});
+countryRouter.get("/all", async (req, res) => {
+  try {
+    const data = await GetAll();
+    res.status(200).json({
+      data,
+    });
+  } catch (error) {
+    res.status(403).json({
+      msg: error,
     });
   }
 });

@@ -43,4 +43,27 @@ async function TagCountry({
   }
 }
 
-export { GetAllCountry, CreateCountry, TagCountry };
+async function GetAll() {
+  try {
+    const data = await prisma.countryCurriculum.findMany({
+      select: {
+        id: true,
+        curriculum: {
+          select: {
+            name: true,
+          },
+        },
+        country: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export { GetAllCountry, CreateCountry, TagCountry, GetAll };
